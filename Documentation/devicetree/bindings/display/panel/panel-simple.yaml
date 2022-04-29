@@ -220,6 +220,8 @@ properties:
       - lg,lp120up1
         # LG 12.9" (2560x1700 pixels) TFT LCD panel
       - lg,lp129qe
+        # Lincoln Technology Solutions, LCD185-101CT 10.1" TFT 1920x1200
+      - lincolntech,lcd185-101ct
         # Logic Technologies LT161010-2NHC 7" WVGA TFT Cap Touch Module
       - logictechno,lt161010-2nhc
         # Logic Technologies LT161010-2NHR 7" WVGA TFT Resistive Touch Module
