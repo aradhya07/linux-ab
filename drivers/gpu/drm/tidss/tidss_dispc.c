@@ -956,6 +956,38 @@ static void dispc_oldi_tx_power(struct dispc_device *dispc, bool power)
 		return;
 
 	switch (dispc->feat->subrev) {
+	case DISPC_AM625:
+		if (power) {
+			switch (dispc->oldi_mode) {
+			case OLDI_MODE_SINGLE_LINK:
+				/* Power down OLDI TX 1 */
+				val = AM625_OLDI1_PWRDN_TX;
+				break;
+
+			case OLDI_MODE_CLONE_SINGLE_LINK:
+			case OLDI_MODE_DUAL_LINK:
+				/* No Power down */
+				val = 0;
+				break;
+
+			default:
+				/* Power down both OLDI TXes and LVDS Bandgap */
+				val = AM625_OLDI0_PWRDN_TX | AM625_OLDI1_PWRDN_TX |
+				      AM625_OLDI_PWRDN_BG;
+				break;
+			}
+
+		} else {
+			/* Power down both OLDI TXes and LVDS Bandgap */
+			val = AM625_OLDI0_PWRDN_TX | AM625_OLDI1_PWRDN_TX |
+			      AM625_OLDI_PWRDN_BG;
+		}
+
+		regmap_update_bits(dispc->oldi_io_ctrl, AM625_OLDI_PD_CTRL,
+				   AM625_OLDI0_PWRDN_TX | AM625_OLDI1_PWRDN_TX |
+				   AM625_OLDI_PWRDN_BG, val);
+		break;
+
 	case DISPC_AM65X:
 		val = power ? 0 : AM65X_OLDI_PWRDN_TX;
 
