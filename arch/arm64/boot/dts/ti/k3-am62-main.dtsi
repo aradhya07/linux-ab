@@ -654,6 +654,13 @@
 		};
 	};
 
+	dss_clock: dss_clock {
+		compatible = "ti,am62-dss-vp0-div-clk";
+		clocks = <&k3_clks 186 0>;
+		#clock-cells = <0>;
+		clock-div = <7>;
+	};
+
 	dss: dss@30200000 {
 		compatible = "ti,am625-dss";
 
@@ -672,7 +679,7 @@
 		power-domains = <&k3_pds 186 TI_SCI_PD_EXCLUSIVE>;
 
 		clocks = <&k3_clks 186 6>,
-			 <&k3_clks 186 0>,
+			 <&dss_clock>,
 			 <&k3_clks 186 2>;
 
 		clock-names = "fck", "vp1", "vp2";
