@@ -34,3 +34,12 @@ config TI_SYSCON_CLK
 	help
 	  This adds clock driver support for syscon based gate
 	  clocks on TI's K2 and K3 SoCs.
+
+config TI_AM62_DSS_CLK
+	tristate "Clock Divider for DSS VP0 of AM62 Family of SoCs"
+	depends on ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST
+	default TI_SCI_CLK
+	help
+	  This adds clock divider driver support for Video Port 0 of Display
+	  SubSystems (DSS) under AM62 Family of SoCs. This clock divider
+	  forwards a seventh (1/7) of the incoming clock.
