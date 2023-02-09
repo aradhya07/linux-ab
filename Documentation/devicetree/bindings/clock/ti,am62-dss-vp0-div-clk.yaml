@@ -1,0 +1,44 @@
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+%YAML 1.2
+---
+$id: http://devicetree.org/schemas/clock/ti,am62-dss-vp0-div-clk.yaml#
+$schema: http://devicetree.org/meta-schemas/core.yaml#
+
+title: TI AM62 DSS - OLDI Divider Clock
+
+maintainers:
+  - Aradhya Bhatia <a-bhatia1@ti.com>
+
+properties:
+  compatible:
+    items:
+      - const: ti,am62-dss-vp0-div-clk
+
+  "#clock-cells":
+    const: 0
+
+  clocks:
+    maxItems: 1
+
+  clock-div:
+    description: Fixed divider
+    $ref: /schemas/types.yaml#/definitions/uint32
+    minimum: 1
+
+required:
+  - compatible
+  - clocks
+  - "#clock-cells"
+  - clock-div
+
+additionalProperties: false
+
+examples:
+  - |
+    clock {
+      compatible = "ti,am62-dss-vp0-div-clk";
+      clocks = <&parent_clock>;
+      #clock-cells = <0>;
+      clock-div = <7>;
+    };
+...
