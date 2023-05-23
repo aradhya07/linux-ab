@@ -134,10 +134,15 @@ static u32 *display_connector_get_output_bus_fmts(struct drm_bridge *bridge,
 
 /*
  * Since this bridge is tied to the connector, it acts like a passthrough,
- * so concerning the input bus formats, either pass the bus formats from the
- * previous bridge or MEDIA_BUS_FMT_FIXED (like select_bus_fmt_recursive())
- * when atomic_get_input_bus_fmts is not supported.
- * This supports negotiation if the bridge chain has all bits in place.
+ * so concerning the input bus formats, pass the particular output bus format
+ * the bridge needs to support. Since the get_atomic_ouptut_bus_fmt hook calls
+ * the same hook of the previous bridge (if the bridge supports that), the
+ * following 3 formats will become same (making display-connector completely
+ * passthrough).
+ *
+ * 1. output bus fmt of display-connector,
+ * 2. input bus fmt of display-connector, and
+ * 3. output bus fmt of previous-bridge.
  */
 static u32 *display_connector_get_input_bus_fmts(struct drm_bridge *bridge,
 					struct drm_bridge_state *bridge_state,
@@ -146,28 +151,18 @@ static u32 *display_connector_get_input_bus_fmts(struct drm_bridge *bridge,
 					u32 output_fmt,
 					unsigned int *num_input_fmts)
 {
-	struct drm_bridge *prev_bridge = drm_bridge_get_prev_bridge(bridge);
-	struct drm_bridge_state *prev_bridge_state;
+	u32 *input_fmts;
 
-	if (!prev_bridge || !prev_bridge->funcs->atomic_get_input_bus_fmts) {
-		u32 *in_bus_fmts;
+	*num_input_fmts = 0;
 
-		*num_input_fmts = 1;
-		in_bus_fmts = kmalloc(sizeof(*in_bus_fmts), GFP_KERNEL);
-		if (!in_bus_fmts)
-			return NULL;
+	input_fmts = kcalloc(1, sizeof(*input_fmts), GFP_KERNEL);
+	if (!input_fmts)
+		return NULL;
 
-		in_bus_fmts[0] = MEDIA_BUS_FMT_FIXED;
+	input_fmts[0] = output_fmt;
+	*num_input_fmts = 1;
 
-		return in_bus_fmts;
-	}
-
-	prev_bridge_state = drm_atomic_get_new_bridge_state(crtc_state->state,
-							    prev_bridge);
-
-	return prev_bridge->funcs->atomic_get_input_bus_fmts(prev_bridge, prev_bridge_state,
-							     crtc_state, conn_state, output_fmt,
-							     num_input_fmts);
+	return input_fmts;
 }
 
 static const struct drm_bridge_funcs display_connector_bridge_funcs = {
