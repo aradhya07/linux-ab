@@ -11,6 +11,7 @@
 
 #define TIDSS_MAX_PORTS 4
 #define TIDSS_MAX_PLANES 4
+#define TIDSS_MAX_OLDI 2
 
 typedef u32 dispc_irq_t;
 

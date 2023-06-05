@@ -23,6 +23,7 @@
 #include "tidss_drv.h"
 #include "tidss_kms.h"
 #include "tidss_irq.h"
+#include "tidss_oldi.h"
 
 /* Power management */
 
@@ -121,6 +122,9 @@ static int tidss_probe(struct platform_device *pdev)
 	struct drm_device *ddev;
 	int ret;
 	int irq;
+	struct device_node *child;
+	u32 i = 0;
+	bool flag = false;
 
 	dev_dbg(dev, "%s\n", __func__);
 
@@ -135,6 +139,27 @@ static int tidss_probe(struct platform_device *pdev)
 	tidss->feat = of_device_get_match_data(dev);
 
 	platform_set_drvdata(pdev, tidss);
+
+	for_each_child_of_node(dev->of_node, child) {
+		if (!strcmp("oldi_tx", child->name)) {
+			dev_err(dev, "Found OLDI node @ i = %d\n", i);
+			ret = tidss_oldi_init(tidss, child);
+			if (ret == -EPROBE_DEFER || ret == -ENODEV) {
+				if (ret == -EPROBE_DEFER)
+					flag = true;
+
+				dev_err(dev, "Ret = %d\n", ret);
+				i++;
+				continue;
+			} else if (ret) {
+				dev_err(dev, "Ret = %d\n", ret);
+				return ret;
+			}
+		}
+		i++;
+	}
+	if (flag)
+		return -EPROBE_DEFER;
 
 	ret = dispc_init(tidss);
 	if (ret) {
