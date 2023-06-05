@@ -23,6 +23,7 @@
 #include "tidss_drv.h"
 #include "tidss_kms.h"
 #include "tidss_irq.h"
+#include "tidss_oldi.h"
 
 /* Power management */
 
@@ -140,10 +141,17 @@ static int tidss_probe(struct platform_device *pdev)
 
 	spin_lock_init(&tidss->wait_lock);
 
+	ret = tidss_oldi_init(tidss);
+	if (ret) {
+		if (ret != -EPROBE_DEFER)
+			dev_err(dev, "failed to init OLDI (%d)\n", ret);
+		return ret;
+	}
+
 	ret = dispc_init(tidss);
 	if (ret) {
 		dev_err(dev, "failed to initialize dispc: %d\n", ret);
-		return ret;
+		goto err_oldi_deinit;
 	}
 
 	pm_runtime_enable(dev);
@@ -201,6 +209,9 @@ err_runtime_suspend:
 #endif
 	pm_runtime_dont_use_autosuspend(dev);
 	pm_runtime_disable(dev);
+
+err_oldi_deinit:
+	tidss_oldi_deinit(tidss);
 
 	return ret;
 }
