@@ -62,6 +62,8 @@ const struct dispc_features dispc_k2g_feats = {
 		[DISPC_VP_DPI] = 150000,
 	},
 
+	.num_dispcs = 1,
+
 	/*
 	 * XXX According TRM the RGB input buffer width up to 2560 should
 	 *     work on 3 taps, but in practice it only works up to 1280.
@@ -86,7 +88,7 @@ const struct dispc_features dispc_k2g_feats = {
 
 	.subrev = DISPC_K2G,
 
-	.common = "common",
+	.common = { "common" },
 
 	.common_regs = tidss_k2g_common_regs,
 
@@ -94,6 +96,10 @@ const struct dispc_features dispc_k2g_feats = {
 	.vp_name = { "vp1" },
 	.ovr_name = { "ovr1" },
 	.vpclk_name =  { "vp1" },
+	.fclk_name =  { "fck" },
+	.vp_dispc_idx = { 0 },
+	.hw_vp_idx = { 0 },
+
 	.vp_bus_type = { DISPC_VP_DPI },
 
 	.vp_feat = { .color = {
@@ -107,6 +113,8 @@ const struct dispc_features dispc_k2g_feats = {
 	.vid_name = { "vid1" },
 	.vid_lite = { false },
 	.vid_order = { 0 },
+	.vid_dispc_idx = { 0 },
+	.hw_vid_idx = { 0 },
 };
 
 static const u16 tidss_am65x_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
@@ -142,6 +150,8 @@ const struct dispc_features dispc_am65x_feats = {
 		[DISPC_VP_OLDI] = 165000,
 	},
 
+	.num_dispcs = 1,
+
 	.scaling = {
 		.in_width_max_5tap_rgb = 1280,
 		.in_width_max_3tap_rgb = 2560,
@@ -162,13 +172,17 @@ const struct dispc_features dispc_am65x_feats = {
 
 	.subrev = DISPC_AM65X,
 
-	.common = "common",
+	.common = { "common" },
 	.common_regs = tidss_am65x_common_regs,
 
 	.num_vps = 2,
 	.vp_name = { "vp1", "vp2" },
 	.ovr_name = { "ovr1", "ovr2" },
 	.vpclk_name =  { "vp1", "vp2" },
+	.fclk_name =  { "fck" },
+	.vp_dispc_idx = { 0, 0 },
+	.hw_vp_idx = { 0, 1 },
+
 	.vp_bus_type = { DISPC_VP_OLDI, DISPC_VP_DPI },
 
 	.vp_feat = { .color = {
@@ -183,6 +197,8 @@ const struct dispc_features dispc_am65x_feats = {
 	.vid_name = { "vid", "vidl1" },
 	.vid_lite = { false, true, },
 	.vid_order = { 1, 0 },
+	.vid_dispc_idx = { 0, 0 },
+	.hw_vid_idx = { 0, 1 },
 };
 
 static const u16 tidss_j721e_common_regs[DISPC_COMMON_REG_TABLE_LEN] = {
@@ -231,6 +247,8 @@ const struct dispc_features dispc_j721e_feats = {
 		[DISPC_VP_INTERNAL] = 600000,
 	},
 
+	.num_dispcs = 1,
+
 	.scaling = {
 		.in_width_max_5tap_rgb = 2048,
 		.in_width_max_3tap_rgb = 4096,
@@ -251,26 +269,34 @@ const struct dispc_features dispc_j721e_feats = {
 
 	.subrev = DISPC_J721E,
 
-	.common = "common_m",
+	.common = { "common_m" },
 	.common_regs = tidss_j721e_common_regs,
 
 	.num_vps = 4,
 	.vp_name = { "vp1", "vp2", "vp3", "vp4" },
 	.ovr_name = { "ovr1", "ovr2", "ovr3", "ovr4" },
 	.vpclk_name = { "vp1", "vp2", "vp3", "vp4" },
+	.fclk_name =  { "fck" },
+	.vp_dispc_idx = { 0, 0, 0, 0 },
+	.hw_vp_idx = { 0, 1, 2, 3 },
+
 	/* Currently hard coded VP routing (see dispc_initial_config()) */
 	.vp_bus_type =	{ DISPC_VP_INTERNAL, DISPC_VP_DPI,
 			  DISPC_VP_INTERNAL, DISPC_VP_DPI, },
+
 	.vp_feat = { .color = {
 			.has_ctm = true,
 			.gamma_size = 1024,
 			.gamma_type = TIDSS_GAMMA_10BIT,
 		},
 	},
+
 	.num_planes = 4,
 	.vid_name = { "vid1", "vidl1", "vid2", "vidl2" },
 	.vid_lite = { 0, 1, 0, 1, },
 	.vid_order = { 1, 3, 0, 2 },
+	.vid_dispc_idx = { 0, 0, 0, 0 },
+	.hw_vid_idx = { 0, 1, 2, 3 },
 };
 
 const struct dispc_features dispc_am625_feats = {
@@ -278,6 +304,8 @@ const struct dispc_features dispc_am625_feats = {
 		[DISPC_VP_DPI] = 165000,
 		[DISPC_VP_INTERNAL] = 170000,
 	},
+
+	.num_dispcs = 1,
 
 	.scaling = {
 		.in_width_max_5tap_rgb = 1280,
@@ -299,13 +327,17 @@ const struct dispc_features dispc_am625_feats = {
 
 	.subrev = DISPC_AM625,
 
-	.common = "common",
+	.common = { "common" },
 	.common_regs = tidss_am65x_common_regs,
 
 	.num_vps = 2,
 	.vp_name = { "vp1", "vp2" },
 	.ovr_name = { "ovr1", "ovr2" },
 	.vpclk_name =  { "vp1", "vp2" },
+	.fclk_name =  { "fck" },
+	.vp_dispc_idx = { 0, 0 },
+	.hw_vp_idx = { 0, 1 },
+
 	.vp_bus_type = { DISPC_VP_INTERNAL, DISPC_VP_DPI },
 
 	.vp_feat = { .color = {
@@ -320,12 +352,16 @@ const struct dispc_features dispc_am625_feats = {
 	.vid_name = { "vid", "vidl1" },
 	.vid_lite = { false, true, },
 	.vid_order = { 1, 0 },
+	.vid_dispc_idx = { 0, 0 },
+	.hw_vid_idx = { 0, 1 },
 };
 
 const struct dispc_features dispc_am62a7_feats = {
 	.max_pclk_khz = {
 		[DISPC_VP_DPI] = 165000,
 	},
+
+	.num_dispcs = 1,
 
 	.scaling = {
 		.in_width_max_5tap_rgb = 1280,
@@ -347,13 +383,17 @@ const struct dispc_features dispc_am62a7_feats = {
 
 	.subrev = DISPC_AM62A7,
 
-	.common = "common",
+	.common = { "common" },
 	.common_regs = tidss_am65x_common_regs,
 
 	.num_vps = 2,
 	.vp_name = { "vp1", "vp2" },
 	.ovr_name = { "ovr1", "ovr2" },
 	.vpclk_name =  { "vp1", "vp2" },
+	.fclk_name =  { "fck" },
+	.vp_dispc_idx = { 0, 0 },
+	.hw_vp_idx = { 0, 1 },
+
 	.vp_bus_type = { DISPC_VP_INTERNAL, DISPC_VP_DPI },
 
 	.vp_feat = { .color = {
@@ -368,6 +408,8 @@ const struct dispc_features dispc_am62a7_feats = {
 	.vid_name = { "vid", "vidl1" },
 	.vid_lite = { false, true, },
 	.vid_order = { 1, 0 },
+	.vid_dispc_idx = { 0, 0 },
+	.hw_vid_idx = { 0, 1 },
 };
 
 static const u16 *dispc_common_regmap;
@@ -380,22 +422,22 @@ struct dispc_device {
 	struct tidss_device *tidss;
 	struct device *dev;
 
-	void __iomem *base_common;
-	void __iomem *base_vid[TIDSS_MAX_PLANES];
-	void __iomem *base_ovr[TIDSS_MAX_PORTS];
-	void __iomem *base_vp[TIDSS_MAX_PORTS];
+	void __iomem *base_common[TIDSS_MAX_DISPCS];
+	void __iomem *base_vid[TIDSS_MAX_DISPCS][TIDSS_MAX_PLANES];
+	void __iomem *base_ovr[TIDSS_MAX_DISPCS][TIDSS_MAX_PORTS];
+	void __iomem *base_vp[TIDSS_MAX_DISPCS][TIDSS_MAX_PORTS];
 
 	struct regmap *oldi_io_ctrl;
 
-	struct clk *vp_clk[TIDSS_MAX_PORTS];
+	struct clk *vp_clk[TIDSS_MAX_DISPCS][TIDSS_MAX_PORTS];
 
 	const struct dispc_features *feat;
 
-	struct clk *fclk;
+	struct clk *fclk[TIDSS_MAX_DISPCS];
 
 	bool is_enabled;
 
-	struct dss_vp_data vp_data[TIDSS_MAX_PORTS];
+	struct dss_vp_data vp_data[TIDSS_MAX_DISPCS][TIDSS_MAX_PORTS];
 
 	u32 *fourccs;
 	u32 num_fourccs;
@@ -405,57 +447,67 @@ struct dispc_device {
 	struct dispc_errata errata;
 };
 
-static void dispc_write(struct dispc_device *dispc, u16 reg, u32 val)
+static void dispc_write(struct dispc_device *dispc, u32 dispc_idx,
+			u16 reg, u32 val)
 {
-	iowrite32(val, dispc->base_common + reg);
+	void __iomem *base = dispc->base_common[dispc_idx];
+
+	iowrite32(val, base + reg);
 }
 
-static u32 dispc_read(struct dispc_device *dispc, u16 reg)
+static u32 dispc_read(struct dispc_device *dispc, u32 dispc_idx,
+		      u16 reg)
 {
-	return ioread32(dispc->base_common + reg);
+	void __iomem *base = dispc->base_common[dispc_idx];
+
+	return ioread32(base + reg);
 }
 
 static
-void dispc_vid_write(struct dispc_device *dispc, u32 hw_plane, u16 reg, u32 val)
+void dispc_vid_write(struct dispc_device *dispc, u32 dispc_idx,
+		     u32 hw_plane, u16 reg, u32 val)
 {
-	void __iomem *base = dispc->base_vid[hw_plane];
+	void __iomem *base = dispc->base_vid[dispc_idx][hw_plane];
 
 	iowrite32(val, base + reg);
 }
 
-static u32 dispc_vid_read(struct dispc_device *dispc, u32 hw_plane, u16 reg)
+static u32 dispc_vid_read(struct dispc_device *dispc, u32 dispc_idx,
+			  u32 hw_plane, u16 reg)
 {
-	void __iomem *base = dispc->base_vid[hw_plane];
+	void __iomem *base = dispc->base_vid[dispc_idx][hw_plane];
 
 	return ioread32(base + reg);
 }
 
-static void dispc_ovr_write(struct dispc_device *dispc, u32 hw_videoport,
-			    u16 reg, u32 val)
+static void dispc_ovr_write(struct dispc_device *dispc, u32 dispc_idx,
+			    u32 hw_videoport, u16 reg, u32 val)
 {
-	void __iomem *base = dispc->base_ovr[hw_videoport];
+	void __iomem *base = dispc->base_ovr[dispc_idx][hw_videoport];
 
 	iowrite32(val, base + reg);
 }
 
-static u32 dispc_ovr_read(struct dispc_device *dispc, u32 hw_videoport, u16 reg)
+static u32 dispc_ovr_read(struct dispc_device *dispc, u32 dispc_idx,
+			  u32 hw_videoport, u16 reg)
 {
-	void __iomem *base = dispc->base_ovr[hw_videoport];
+	void __iomem *base = dispc->base_ovr[dispc_idx][hw_videoport];
 
 	return ioread32(base + reg);
 }
 
-static void dispc_vp_write(struct dispc_device *dispc, u32 hw_videoport,
-			   u16 reg, u32 val)
+static void dispc_vp_write(struct dispc_device *dispc, u32 dispc_idx,
+			   u32 hw_videoport, u16 reg, u32 val)
 {
-	void __iomem *base = dispc->base_vp[hw_videoport];
+	void __iomem *base = dispc->base_vp[dispc_idx][hw_videoport];
 
 	iowrite32(val, base + reg);
 }
 
-static u32 dispc_vp_read(struct dispc_device *dispc, u32 hw_videoport, u16 reg)
+static u32 dispc_vp_read(struct dispc_device *dispc, u32 dipsc_idx,
+			 u32 hw_videoport, u16 reg)
 {
-	void __iomem *base = dispc->base_vp[hw_videoport];
+	void __iomem *base = dispc->base_vp[dispc_idx][hw_videoport];
 
 	return ioread32(base + reg);
 }
@@ -485,57 +537,61 @@ static u32 FLD_MOD(u32 orig, u32 val, u32 start, u32 end)
 	return (orig & ~FLD_MASK(start, end)) | FLD_VAL(val, start, end);
 }
 
-static u32 REG_GET(struct dispc_device *dispc, u32 idx, u32 start, u32 end)
+static u32 REG_GET(struct dispc_device *dispc, u32 dispc_idx, u32 idx,
+		   u32 start, u32 end)
 {
-	return FLD_GET(dispc_read(dispc, idx), start, end);
+	return FLD_GET(dispc_read(dispc, dispc_idx, idx), start, end);
 }
 
-static void REG_FLD_MOD(struct dispc_device *dispc, u32 idx, u32 val,
-			u32 start, u32 end)
+static void REG_FLD_MOD(struct dispc_device *dispc, u32 dispc_idx, u32 idx,
+			u32 val, u32 start, u32 end)
 {
-	dispc_write(dispc, idx, FLD_MOD(dispc_read(dispc, idx), val,
-					start, end));
+	dispc_write(dispc, dispc_idx, idx,
+		    FLD_MOD(dispc_read(dispc, dispc_idx, idx),
+			    val, start, end));
 }
 
-static u32 VID_REG_GET(struct dispc_device *dispc, u32 hw_plane, u32 idx,
-		       u32 start, u32 end)
+static u32 VID_REG_GET(struct dispc_device *dispc, u32 dipsc_idx,
+		       u32 hw_plane, u32 idx, u32 start, u32 end)
 {
-	return FLD_GET(dispc_vid_read(dispc, hw_plane, idx), start, end);
+	return FLD_GET(dispc_vid_read(dispc, dipsc_idx, hw_plane, idx),
+		       start, end);
 }
 
-static void VID_REG_FLD_MOD(struct dispc_device *dispc, u32 hw_plane, u32 idx,
-			    u32 val, u32 start, u32 end)
+static void VID_REG_FLD_MOD(struct dispc_device *dispc, u32 dipsc_idx,
+			    u32 hw_plane, u32 idx, u32 val, u32 start, u32 end)
 {
-	dispc_vid_write(dispc, hw_plane, idx,
-			FLD_MOD(dispc_vid_read(dispc, hw_plane, idx),
-				val, start, end));
+	dispc_vid_write(dispc, dipsc_idx, hw_plane, idx,
+			FLD_MOD(dispc_vid_read(dispc, dipsc_idx, hw_plane, idx),
+			val, start, end));
 }
 
-static u32 VP_REG_GET(struct dispc_device *dispc, u32 vp, u32 idx,
-		      u32 start, u32 end)
+static u32 VP_REG_GET(struct dispc_device *dispc, u32 dipsc_idx,
+		      u32 vp, u32 idx, u32 start, u32 end)
 {
-	return FLD_GET(dispc_vp_read(dispc, vp, idx), start, end);
+	return FLD_GET(dispc_vp_read(dispc, dipsc_idx, vp, idx), start, end);
 }
 
-static void VP_REG_FLD_MOD(struct dispc_device *dispc, u32 vp, u32 idx, u32 val,
-			   u32 start, u32 end)
+static void VP_REG_FLD_MOD(struct dispc_device *dispc, u32 dipsc_idx, u32 vp,
+			   u32 idx, u32 val, u32 start, u32 end)
 {
-	dispc_vp_write(dispc, vp, idx, FLD_MOD(dispc_vp_read(dispc, vp, idx),
-					       val, start, end));
+	dispc_vp_write(dispc, dipsc_idx, vp, idx,
+		       FLD_MOD(dispc_vp_read(dispc, dipsc_idx, vp, idx),
+		       val, start, end));
 }
 
 __maybe_unused
-static u32 OVR_REG_GET(struct dispc_device *dispc, u32 ovr, u32 idx,
-		       u32 start, u32 end)
+static u32 OVR_REG_GET(struct dispc_device *dispc, u32 dipsc_idx, u32 ovr,
+		       u32 idx, u32 start, u32 end)
 {
-	return FLD_GET(dispc_ovr_read(dispc, ovr, idx), start, end);
+	return FLD_GET(dispc_ovr_read(dispc, dipsc_idx, ovr, idx), start, end);
 }
 
-static void OVR_REG_FLD_MOD(struct dispc_device *dispc, u32 ovr, u32 idx,
-			    u32 val, u32 start, u32 end)
+static void OVR_REG_FLD_MOD(struct dispc_device *dispc, u32 dipsc_idx, u32 ovr,
+			    u32 idx, u32 val, u32 start, u32 end)
 {
-	dispc_ovr_write(dispc, ovr, idx,
-			FLD_MOD(dispc_ovr_read(dispc, ovr, idx),
+	dispc_ovr_write(dispc, dipsc_idx, ovr, idx,
+			FLD_MOD(dispc_ovr_read(dispc, dipsc_idx, ovr, idx),
 				val, start, end));
 }
 
@@ -936,8 +992,8 @@ struct dispc_bus_format *dispc_vp_find_bus_fmt(struct dispc_device *dispc,
 	return NULL;
 }
 
-int dispc_vp_bus_check(struct dispc_device *dispc, u32 hw_videoport,
-		       const struct drm_crtc_state *state)
+int dispc_vp_bus_check(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		       u32 hw_videoport, const struct drm_crtc_state *state)
 {
 	const struct tidss_crtc_state *tstate = to_tidss_crtc_state(state);
 	const struct dispc_bus_format *fmt;
@@ -950,10 +1006,14 @@ int dispc_vp_bus_check(struct dispc_device *dispc, u32 hw_videoport,
 		return -EINVAL;
 	}
 
-	if (dispc->feat->vp_bus_type[hw_videoport] != DISPC_VP_OLDI &&
-	    fmt->is_oldi_fmt) {
+	for (int i = 0; i < dispc->feat->num_vps; i++)
+		if (dispc->feat->hw_vp_idx == hw_videoport &&
+		    dispc->feat->vp_dispc_idx == hw_dipsc_idx)
+			break;
+
+	if (dispc->feat->vp_bus_type[i] != DISPC_VP_OLDI && fmt->is_oldi_fmt) {
 		dev_dbg(dispc->dev, "%s: %s is not OLDI-port\n",
-			__func__, dispc->feat->vp_name[hw_videoport]);
+			__func__, dispc->feat->vp_name[i]);
 		return -EINVAL;
 	}
 
@@ -980,7 +1040,8 @@ static void dispc_oldi_tx_power(struct dispc_device *dispc, bool power)
 }
 
 static void dispc_set_num_datalines(struct dispc_device *dispc,
-				    u32 hw_videoport, int num_lines)
+				    u32 hw_dipsc_idx, u32 hw_videoport,
+				    int num_lines)
 {
 	int v;
 
@@ -1002,10 +1063,12 @@ static void dispc_set_num_datalines(struct dispc_device *dispc,
 		v = 3;
 	}
 
-	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, v, 10, 8);
+	VP_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport,
+		       DISPC_VP_CONTROL, v, 10, 8);
 }
 
-static void dispc_enable_oldi(struct dispc_device *dispc, u32 hw_videoport,
+static void dispc_enable_oldi(struct dispc_device *dispc,
+			      u32 hw_dipsc_idx, u32 hw_videoport,
 			      const struct dispc_bus_format *fmt)
 {
 	u32 oldi_cfg = 0;
@@ -1031,19 +1094,21 @@ static void dispc_enable_oldi(struct dispc_device *dispc, u32 hw_videoport,
 
 	oldi_cfg |= BIT(0); /* ENABLE */
 
-	dispc_vp_write(dispc, hw_videoport, DISPC_VP_DSS_OLDI_CFG, oldi_cfg);
+	dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport,
+		       DISPC_VP_DSS_OLDI_CFG, oldi_cfg);
 
-	while (!(oldi_reset_bit & dispc_read(dispc, DSS_SYSSTATUS)) &&
+	while (!(oldi_reset_bit &
+		 dispc_read(dispc, hw_dipsc_idx, DSS_SYSSTATUS)) &&
 	       count < 10000)
 		count++;
 
-	if (!(oldi_reset_bit & dispc_read(dispc, DSS_SYSSTATUS)))
+	if (!(oldi_reset_bit & dispc_read(dispc, hw_dipsc_idx, DSS_SYSSTATUS)))
 		dev_warn(dispc->dev, "%s: timeout waiting OLDI reset done\n",
 			 __func__);
 }
 
-void dispc_vp_prepare(struct dispc_device *dispc, u32 hw_videoport,
-		      const struct drm_crtc_state *state)
+void dispc_vp_prepare(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		      u32 hw_videoport, const struct drm_crtc_state *state)
 {
 	const struct tidss_crtc_state *tstate = to_tidss_crtc_state(state);
 	const struct dispc_bus_format *fmt;
@@ -1054,15 +1119,20 @@ void dispc_vp_prepare(struct dispc_device *dispc, u32 hw_videoport,
 	if (WARN_ON(!fmt))
 		return;
 
-	if (dispc->feat->vp_bus_type[hw_videoport] == DISPC_VP_OLDI) {
+	for (int i = 0; i < dispc->feat->num_vps; i++)
+		if (dispc->feat->hw_vp_idx == hw_videoport &&
+		    dispc->feat->vp_dispc_idx == hw_dipsc_idx)
+			break;
+
+	if (dispc->feat->vp_bus_type[i] == DISPC_VP_OLDI) {
 		dispc_oldi_tx_power(dispc, true);
 
-		dispc_enable_oldi(dispc, hw_videoport, fmt);
+		dispc_enable_oldi(dispc, hw_dipsc_idx, hw_videoport, fmt);
 	}
 }
 
-void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
-		     const struct drm_crtc_state *state)
+void dispc_vp_enable(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		     u32 hw_videoport, const struct drm_crtc_state *state)
 {
 	const struct drm_display_mode *mode = &state->adjusted_mode;
 	const struct tidss_crtc_state *tstate = to_tidss_crtc_state(state);
@@ -1076,7 +1146,8 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
 	if (WARN_ON(!fmt))
 		return;
 
-	dispc_set_num_datalines(dispc, hw_videoport, fmt->data_width);
+	dispc_set_num_datalines(dispc, hw_dipsc_idx, hw_videoport,
+				fmt->data_width);
 
 	hfp = mode->hsync_start - mode->hdisplay;
 	hsw = mode->hsync_end - mode->hsync_start;
@@ -1086,12 +1157,12 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
 	vsw = mode->vsync_end - mode->vsync_start;
 	vbp = mode->vtotal - mode->vsync_end;
 
-	dispc_vp_write(dispc, hw_videoport, DISPC_VP_TIMING_H,
+	dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_TIMING_H,
 		       FLD_VAL(hsw - 1, 7, 0) |
 		       FLD_VAL(hfp - 1, 19, 8) |
 		       FLD_VAL(hbp - 1, 31, 20));
 
-	dispc_vp_write(dispc, hw_videoport, DISPC_VP_TIMING_V,
+	dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_TIMING_V,
 		       FLD_VAL(vsw - 1, 7, 0) |
 		       FLD_VAL(vfp, 19, 8) |
 		       FLD_VAL(vbp, 31, 20));
@@ -1112,11 +1183,16 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
 	/* always use aligned syncs */
 	align = true;
 
+	for (int i = 0; i < dispc->feat->num_vps; i++)
+		if (dispc->feat->hw_vp_idx == hw_videoport &&
+		    dispc->feat->vp_dispc_idx == hw_dipsc_idx)
+			break;
+
 	/* always use DE_HIGH for OLDI */
-	if (dispc->feat->vp_bus_type[hw_videoport] == DISPC_VP_OLDI)
+	if (dispc->feat->vp_bus_type[i] == DISPC_VP_OLDI)
 		ieo = false;
 
-	dispc_vp_write(dispc, hw_videoport, DISPC_VP_POL_FREQ,
+	dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_POL_FREQ,
 		       FLD_VAL(align, 18, 18) |
 		       FLD_VAL(onoff, 17, 17) |
 		       FLD_VAL(rf, 16, 16) |
@@ -1125,36 +1201,50 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
 		       FLD_VAL(ihs, 13, 13) |
 		       FLD_VAL(ivs, 12, 12));
 
-	dispc_vp_write(dispc, hw_videoport, DISPC_VP_SIZE_SCREEN,
+	dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_SIZE_SCREEN,
 		       FLD_VAL(mode->hdisplay - 1, 11, 0) |
 		       FLD_VAL(mode->vdisplay - 1, 27, 16));
 
-	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, 1, 0, 0);
+	VP_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport,
+		       DISPC_VP_CONTROL, 1, 0, 0);
 }
 
-void dispc_vp_disable(struct dispc_device *dispc, u32 hw_videoport)
+void dispc_vp_disable(struct dispc_device *dispc, u32 hw_dispc_idx,
+		      u32 hw_videoport)
 {
-	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, 0, 0, 0);
+	VP_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport,
+		       DISPC_VP_CONTROL, 0, 0, 0);
 }
 
-void dispc_vp_unprepare(struct dispc_device *dispc, u32 hw_videoport)
+void dispc_vp_unprepare(struct dispc_device *dispc, u32 hw_dipsc_idx,
+			u32 hw_videoport)
 {
-	if (dispc->feat->vp_bus_type[hw_videoport] == DISPC_VP_OLDI) {
-		dispc_vp_write(dispc, hw_videoport, DISPC_VP_DSS_OLDI_CFG, 0);
+	for (int i = 0; i < dispc->feat->num_vps; i++)
+		if (dispc->feat->hw_vp_idx == hw_videoport &&
+		    dispc->feat->vp_dispc_idx == hw_dipsc_idx)
+			break;
+
+	if (dispc->feat->vp_bus_type[i] == DISPC_VP_OLDI) {
+		dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport,
+			       DISPC_VP_DSS_OLDI_CFG, 0);
 
 		dispc_oldi_tx_power(dispc, false);
 	}
 }
 
-bool dispc_vp_go_busy(struct dispc_device *dispc, u32 hw_videoport)
+bool dispc_vp_go_busy(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		      u32 hw_videoport)
 {
-	return VP_REG_GET(dispc, hw_videoport, DISPC_VP_CONTROL, 5, 5);
+	return VP_REG_GET(dispc, hw_dispc_idx, hw_videoport,
+			  DISPC_VP_CONTROL, 5, 5);
 }
 
-void dispc_vp_go(struct dispc_device *dispc, u32 hw_videoport)
+void dispc_vp_go(struct dispc_device *dispc, u32 hw_dispc_idx, u32 hw_videoport)
 {
-	WARN_ON(VP_REG_GET(dispc, hw_videoport, DISPC_VP_CONTROL, 5, 5));
-	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, 1, 5, 5);
+	WARN_ON(VP_REG_GET(dispc, hw_dispc_idx, hw_videoport,
+			   DISPC_VP_CONTROL, 5, 5));
+	VP_REG_FLD_MOD(dispc, hw_dispc_idx, hw_videoport,
+		       DISPC_VP_CONTROL, 1, 5, 5);
 }
 
 enum c8_to_c12_mode { C8_TO_C12_REPLICATE, C8_TO_C12_MAX, C8_TO_C12_MIN };
@@ -1198,27 +1288,33 @@ static u64 argb8888_to_argb12121212(u32 argb8888, enum c8_to_c12_mode m)
 }
 
 static void dispc_vp_set_default_color(struct dispc_device *dispc,
-				       u32 hw_videoport, u32 default_color)
+				       u32 hw_dipsc_idx, u32 hw_videoport,
+				       u32 default_color)
 {
 	u64 v;
 
 	v = argb8888_to_argb12121212(default_color, C8_TO_C12_REPLICATE);
 
-	dispc_ovr_write(dispc, hw_videoport,
+	dispc_ovr_write(dispc, hw_dipsc_idx, hw_videoport,
 			DISPC_OVR_DEFAULT_COLOR, v & 0xffffffff);
-	dispc_ovr_write(dispc, hw_videoport,
+	dispc_ovr_write(dispc, hw_dipsc_idx, hw_videoport,
 			DISPC_OVR_DEFAULT_COLOR2, (v >> 32) & 0xffff);
 }
 
 enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
-					 u32 hw_videoport,
+					 u32 hw_dipsc_idx, u32 hw_videoport,
 					 const struct drm_display_mode *mode)
 {
 	u32 hsw, hfp, hbp, vsw, vfp, vbp;
 	enum dispc_vp_bus_type bus_type;
 	int max_pclk;
 
-	bus_type = dispc->feat->vp_bus_type[hw_videoport];
+	for (int i = 0; i < dispc->feat->num_vps; i++)
+		if (dispc->feat->hw_vp_idx == hw_videoport &&
+		    dispc->feat->vp_dispc_idx == hw_dipsc_idx)
+			break;
+
+	bus_type = dispc->feat->vp_bus_type[i];
 
 	max_pclk = dispc->feat->max_pclk_khz[bus_type];
 
@@ -1284,9 +1380,10 @@ enum drm_mode_status dispc_vp_mode_valid(struct dispc_device *dispc,
 	return MODE_OK;
 }
 
-int dispc_vp_enable_clk(struct dispc_device *dispc, u32 hw_videoport)
+int dispc_vp_enable_clk(struct dispc_device *dispc, u32 hw_dipsc_idx,
+			u32 hw_videoport)
 {
-	int ret = clk_prepare_enable(dispc->vp_clk[hw_videoport]);
+	int ret = clk_prepare_enable(dispc->vp_clk[hw_dipsc_idx][hw_videoport]);
 
 	if (ret)
 		dev_err(dispc->dev, "%s: enabling clk failed: %d\n", __func__,
@@ -1295,9 +1392,10 @@ int dispc_vp_enable_clk(struct dispc_device *dispc, u32 hw_videoport)
 	return ret;
 }
 
-void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_videoport)
+void dispc_vp_disable_clk(struct dispc_device *dispc, u32 hw_dipsc_idx,
+			  u32 hw_videoport)
 {
-	clk_disable_unprepare(dispc->vp_clk[hw_videoport]);
+	clk_disable_unprepare(dispc->vp_clk[hw_dipsc_idx][hw_videoport]);
 }
 
 /*
@@ -1312,83 +1410,87 @@ unsigned int dispc_pclk_diff(unsigned long rate, unsigned long real_rate)
 	return (unsigned int)(abs(((rr - r) * 100) / r));
 }
 
-int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_videoport,
-			  unsigned long rate)
+int dispc_vp_set_clk_rate(struct dispc_device *dispc, u32 hw_dipsc_idx,
+			  u32 hw_videoport, unsigned long rate)
 {
 	int r;
 	unsigned long new_rate;
 
-	r = clk_set_rate(dispc->vp_clk[hw_videoport], rate);
+	r = clk_set_rate(dispc->vp_clk[hw_dipsc_idx][hw_videoport], rate);
 	if (r) {
-		dev_err(dispc->dev, "vp%d: failed to set clk rate to %lu\n",
-			hw_videoport, rate);
+		dev_err(dispc->dev,
+			"dispc%d vp%d: failed to set clk rate to %lu\n",
+			hw_dipsc_idx, hw_videoport, rate);
 		return r;
 	}
 
-	new_rate = clk_get_rate(dispc->vp_clk[hw_videoport]);
+	new_rate = clk_get_rate(dispc->vp_clk[hw_dipsc_idx][hw_videoport]);
 
 	if (dispc_pclk_diff(rate, new_rate) > 5)
 		dev_warn(dispc->dev,
-			 "vp%d: Clock rate %lu differs over 5%% from requested %lu\n",
-			 hw_videoport, new_rate, rate);
+			 "dispc%d vp%d: Clock rate %lu differs over 5%% from requested %lu\n",
+			 hw_dipsc_idx, hw_videoport, new_rate, rate);
 
-	dev_dbg(dispc->dev, "vp%d: new rate %lu Hz (requested %lu Hz)\n",
-		hw_videoport, clk_get_rate(dispc->vp_clk[hw_videoport]), rate);
+	dev_dbg(dispc->dev,
+		"dispc%d vp%d: new rate %lu Hz (requested %lu Hz)\n",
+		hw_dipsc_idx, hw_videoport,
+		clk_get_rate(dispc->vp_clk[hw_dipsc_idx][hw_videoport]), rate);
 
 	return 0;
 }
 
 /* OVR */
 static void dispc_k2g_ovr_set_plane(struct dispc_device *dispc,
-				    u32 hw_plane, u32 hw_videoport,
-				    u32 x, u32 y, u32 layer)
+				    u32 hw_dipsc_idx, u32 hw_plane,
+				    u32 hw_videoport, u32 x, u32 y, u32 layer)
 {
 	/* On k2g there is only one plane and no need for ovr */
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_K2G_POSITION,
-			x | (y << 16));
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+			DISPC_VID_K2G_POSITION, x | (y << 16));
 }
 
 static void dispc_am65x_ovr_set_plane(struct dispc_device *dispc,
-				      u32 hw_plane, u32 hw_videoport,
-				      u32 x, u32 y, u32 layer)
+				      u32 hw_dipsc_idx, u32 hw_plane,
+				      u32 hw_videoport, u32 x, u32 y, u32 layer)
 {
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES(layer),
-			hw_plane, 4, 1);
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES(layer),
-			x, 17, 6);
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES(layer),
-			y, 30, 19);
+	OVR_REG_FLD_MOD(dispc, hw_dispc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES(layer), hw_plane, 4, 1);
+	OVR_REG_FLD_MOD(dispc, hw_dispc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES(layer), x, 17, 6);
+	OVR_REG_FLD_MOD(dispc, hw_dispc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES(layer), y, 30, 19);
 }
 
 static void dispc_j721e_ovr_set_plane(struct dispc_device *dispc,
-				      u32 hw_plane, u32 hw_videoport,
-				      u32 x, u32 y, u32 layer)
+				      u32 hw_dispc_idx, u32 hw_plane,
+				      u32 hw_videoport, u32 x, u32 y, u32 layer)
 {
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES(layer),
-			hw_plane, 4, 1);
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES2(layer),
-			x, 13, 0);
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES2(layer),
-			y, 29, 16);
+	OVR_REG_FLD_MOD(dispc, hw_dispc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES(layer), hw_plane, 4, 1);
+	OVR_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES2(layer), x, 13, 0);
+	OVR_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES2(layer), y, 29, 16);
 }
 
-void dispc_ovr_set_plane(struct dispc_device *dispc, u32 hw_plane,
-			 u32 hw_videoport, u32 x, u32 y, u32 layer)
+void dispc_ovr_set_plane(struct dispc_device *dispc, u32 hw_dispc_idx,
+			 u32 hw_plane, u32 hw_videoport, u32 x, u32 y,
+			 u32 layer)
 {
 	switch (dispc->feat->subrev) {
 	case DISPC_K2G:
-		dispc_k2g_ovr_set_plane(dispc, hw_plane, hw_videoport,
-					x, y, layer);
+		dispc_k2g_ovr_set_plane(dispc, hw_dipsc_idx, hw_plane,
+					hw_videoport, x, y, layer);
 		break;
 	case DISPC_AM625:
 	case DISPC_AM62A7:
 	case DISPC_AM65X:
-		dispc_am65x_ovr_set_plane(dispc, hw_plane, hw_videoport,
-					  x, y, layer);
+		dispc_am65x_ovr_set_plane(dispc, hw_dipsc_idx, hw_plane,
+					  hw_videoport, x, y, layer);
 		break;
 	case DISPC_J721E:
-		dispc_j721e_ovr_set_plane(dispc, hw_plane, hw_videoport,
-					  x, y, layer);
+		dispc_j721e_ovr_set_plane(dispc, hw_dipsc_idx, hw_plane,
+					  hw_videoport, x, y, layer);
 		break;
 	default:
 		WARN_ON(1);
@@ -1396,14 +1498,14 @@ void dispc_ovr_set_plane(struct dispc_device *dispc, u32 hw_plane,
 	}
 }
 
-void dispc_ovr_enable_layer(struct dispc_device *dispc,
+void dispc_ovr_enable_layer(struct dispc_device *dispc, u32 hw_dipsc_idx,
 			    u32 hw_videoport, u32 layer, bool enable)
 {
 	if (dispc->feat->subrev == DISPC_K2G)
 		return;
 
-	OVR_REG_FLD_MOD(dispc, hw_videoport, DISPC_OVR_ATTRIBUTES(layer),
-			!!enable, 0, 0);
+	OVR_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport,
+			DISPC_OVR_ATTRIBUTES(layer), !!enable, 0, 0);
 }
 
 /* CSC */
@@ -1485,7 +1587,8 @@ static void dispc_csc_cpr_regval(const struct dispc_csc_coef *csc,
 
 #undef CVAL
 
-static void dispc_k2g_vid_write_csc(struct dispc_device *dispc, u32 hw_plane,
+static void dispc_k2g_vid_write_csc(struct dispc_device *dispc,
+				    u32 hw_dipsc_idx, u32 hw_plane,
 				    const struct dispc_csc_coef *csc)
 {
 	static const u16 dispc_vid_csc_coef_reg[] = {
@@ -1504,12 +1607,12 @@ static void dispc_k2g_vid_write_csc(struct dispc_device *dispc, u32 hw_plane,
 			 __func__, csc->name);
 
 	for (i = 0; i < ARRAY_SIZE(dispc_vid_csc_coef_reg); i++)
-		dispc_vid_write(dispc, hw_plane, dispc_vid_csc_coef_reg[i],
-				regval[i]);
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+				dispc_vid_csc_coef_reg[i], regval[i]);
 }
 
-static void dispc_k3_vid_write_csc(struct dispc_device *dispc, u32 hw_plane,
-				   const struct dispc_csc_coef *csc)
+static void dispc_k3_vid_write_csc(struct dispc_device *dispc, u32 hw_dispc_idx,
+				   u32 hw_plane, const struct dispc_csc_coef *csc)
 {
 	static const u16 dispc_vid_csc_coef_reg[DISPC_CSC_REGVAL_LEN] = {
 		DISPC_VID_CSC_COEF(0), DISPC_VID_CSC_COEF(1),
@@ -1523,8 +1626,8 @@ static void dispc_k3_vid_write_csc(struct dispc_device *dispc, u32 hw_plane,
 	csc->to_regval(csc, regval);
 
 	for (i = 0; i < ARRAY_SIZE(dispc_vid_csc_coef_reg); i++)
-		dispc_vid_write(dispc, hw_plane, dispc_vid_csc_coef_reg[i],
-				regval[i]);
+		dispc_vid_write(dispc, hw_dispc_idx, hw_plane,
+				dispc_vid_csc_coef_reg[i], regval[i]);
 }
 
 /* YUV -> RGB, ITU-R BT.601, full range */
@@ -1605,7 +1708,8 @@ struct dispc_csc_coef *dispc_find_csc(enum drm_color_encoding encoding,
 	return NULL;
 }
 
-static void dispc_vid_csc_setup(struct dispc_device *dispc, u32 hw_plane,
+static void dispc_vid_csc_setup(struct dispc_device *dispc,
+				u32 hw_dispc_idx, u32 hw_plane,
 				const struct drm_plane_state *state)
 {
 	const struct dispc_csc_coef *coef;
@@ -1618,15 +1722,16 @@ static void dispc_vid_csc_setup(struct dispc_device *dispc, u32 hw_plane,
 	}
 
 	if (dispc->feat->subrev == DISPC_K2G)
-		dispc_k2g_vid_write_csc(dispc, hw_plane, coef);
+		dispc_k2g_vid_write_csc(dispc, hw_dipsc_idx, hw_plane, coef);
 	else
-		dispc_k3_vid_write_csc(dispc, hw_plane, coef);
+		dispc_k3_vid_write_csc(dispc, hw_dipsc_idx, hw_plane, coef);
 }
 
-static void dispc_vid_csc_enable(struct dispc_device *dispc, u32 hw_plane,
-				 bool enable)
+static void dispc_vid_csc_enable(struct dispc_device *dispc, u32 hw_dipsc_idx,
+				 u32 hw_plane, bool enable)
 {
-	VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES, !!enable, 9, 9);
+	VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_ATTRIBUTES,
+			!!enable, 9, 9);
 }
 
 /* SCALER */
@@ -1644,7 +1749,7 @@ enum dispc_vid_fir_coef_set {
 };
 
 static void dispc_vid_write_fir_coefs(struct dispc_device *dispc,
-				      u32 hw_plane,
+				      u32 hw_dipsc_idx, u32 hw_plane,
 				      enum dispc_vid_fir_coef_set coef_set,
 				      const struct tidss_scale_coefs *coefs)
 {
@@ -1675,7 +1780,7 @@ static void dispc_vid_write_fir_coefs(struct dispc_device *dispc,
 		u16 reg = c0_base + phase * 4;
 		u16 c0 = coefs->c0[phase];
 
-		dispc_vid_write(dispc, hw_plane, reg, c0);
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, reg, c0);
 	}
 
 	for (phase = 0; phase <= 15; ++phase) {
@@ -1687,7 +1792,7 @@ static void dispc_vid_write_fir_coefs(struct dispc_device *dispc,
 		c2 = coefs->c2[phase];
 		c12 = FLD_VAL(c1, 19, 10) | FLD_VAL(c2, 29, 20);
 
-		dispc_vid_write(dispc, hw_plane, reg, c12);
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, reg, c12);
 	}
 }
 
@@ -1877,16 +1982,16 @@ static int dispc_vid_calc_scaling(struct dispc_device *dispc,
 }
 
 static void dispc_vid_set_scaling(struct dispc_device *dispc,
-				  u32 hw_plane,
+				  u32 hw_dipsc_idx, u32 hw_plane,
 				  struct dispc_scaling_params *sp,
 				  u32 fourcc)
 {
 	/* HORIZONTAL RESIZE ENABLE */
-	VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES,
+	VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_ATTRIBUTES,
 			sp->scale_x, 7, 7);
 
 	/* VERTICAL RESIZE ENABLE */
-	VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES,
+	VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_ATTRIBUTES,
 			sp->scale_y, 8, 8);
 
 	/* Skip the rest if no scaling is used */
@@ -1894,36 +1999,38 @@ static void dispc_vid_set_scaling(struct dispc_device *dispc,
 		return;
 
 	/* VERTICAL 5-TAPS  */
-	VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES,
+	VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_ATTRIBUTES,
 			sp->five_taps, 21, 21);
 
 	if (dispc_fourcc_is_yuv(fourcc)) {
 		if (sp->scale_x) {
-			dispc_vid_write(dispc, hw_plane, DISPC_VID_FIRH2,
-					sp->fir_xinc_uv);
-			dispc_vid_write_fir_coefs(dispc, hw_plane,
+			dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+					DISPC_VID_FIRH2, sp->fir_xinc_uv);
+			dispc_vid_write_fir_coefs(dispc, hw_dipsc_idx, hw_plane,
 						  DISPC_VID_FIR_COEF_HORIZ_UV,
 						  sp->xcoef_uv);
 		}
 		if (sp->scale_y) {
-			dispc_vid_write(dispc, hw_plane, DISPC_VID_FIRV2,
-					sp->fir_yinc_uv);
-			dispc_vid_write_fir_coefs(dispc, hw_plane,
+			dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+					DISPC_VID_FIRV2, sp->fir_yinc_uv);
+			dispc_vid_write_fir_coefs(dispc, hw_dipsc_idx, hw_plane,
 						  DISPC_VID_FIR_COEF_VERT_UV,
 						  sp->ycoef_uv);
 		}
 	}
 
 	if (sp->scale_x) {
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_FIRH, sp->fir_xinc);
-		dispc_vid_write_fir_coefs(dispc, hw_plane,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_FIRH,
+				sp->fir_xinc);
+		dispc_vid_write_fir_coefs(dispc, hw_dipsc_idx, hw_plane,
 					  DISPC_VID_FIR_COEF_HORIZ,
 					  sp->xcoef);
 	}
 
 	if (sp->scale_y) {
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_FIRV, sp->fir_yinc);
-		dispc_vid_write_fir_coefs(dispc, hw_plane,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_FIRV,
+				sp->fir_yinc);
+		dispc_vid_write_fir_coefs(dispc, hw_dipsc_idx, hw_plane,
 					  DISPC_VID_FIR_COEF_VERT, sp->ycoef);
 	}
 }
@@ -1977,13 +2084,15 @@ static const struct {
 };
 
 static void dispc_plane_set_pixel_format(struct dispc_device *dispc,
-					 u32 hw_plane, u32 fourcc)
+					 u32 hw_dipsc_idx, u32 hw_plane,
+					 u32 fourcc)
 {
 	unsigned int i;
 
 	for (i = 0; i < ARRAY_SIZE(dispc_color_formats); ++i) {
 		if (dispc_color_formats[i].fourcc == fourcc) {
-			VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES,
+			VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane,
+					DISPC_VID_ATTRIBUTES,
 					dispc_color_formats[i].dss_code,
 					6, 1);
 			return;
@@ -2015,8 +2124,8 @@ static s32 pixinc(int pixels, u8 ps)
 	return 0;
 }
 
-int dispc_plane_check(struct dispc_device *dispc, u32 hw_plane,
-		      const struct drm_plane_state *state,
+int dispc_plane_check(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		      u32 hw_plane, const struct drm_plane_state *state,
 		      u32 hw_videoport)
 {
 	bool lite = dispc->feat->vid_lite[hw_plane];
@@ -2030,9 +2139,9 @@ int dispc_plane_check(struct dispc_device *dispc, u32 hw_plane,
 		if (!dispc_find_csc(state->color_encoding,
 				    state->color_range)) {
 			dev_dbg(dispc->dev,
-				"%s: Unsupported CSC (%u,%u) for HW plane %u\n",
+				"%s: Unsupported CSC (%u,%u) for DISPC: %u HW plane %u\n",
 				__func__, state->color_encoding,
-				state->color_range, hw_plane);
+				state->color_range, hw_dipsc_idx, hw_plane);
 			return -EINVAL;
 		}
 	}
@@ -2086,8 +2195,8 @@ dma_addr_t dispc_plane_state_p_uv_addr(const struct drm_plane_state *state)
 		(y * fb->pitches[1] / fb->format->vsub);
 }
 
-void dispc_plane_setup(struct dispc_device *dispc, u32 hw_plane,
-		       const struct drm_plane_state *state,
+void dispc_plane_setup(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		       u32 hw_plane, const struct drm_plane_state *state,
 		       u32 hw_videoport)
 {
 	bool lite = dispc->feat->vid_lite[hw_plane];
@@ -2099,25 +2208,29 @@ void dispc_plane_setup(struct dispc_device *dispc, u32 hw_plane,
 
 	dispc_vid_calc_scaling(dispc, state, &scale, lite);
 
-	dispc_plane_set_pixel_format(dispc, hw_plane, fourcc);
+	dispc_plane_set_pixel_format(dispc, hw_dispc_idx, hw_plane, fourcc);
 
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_BA_0, dma_addr & 0xffffffff);
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_BA_EXT_0, (u64)dma_addr >> 32);
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_BA_1, dma_addr & 0xffffffff);
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_BA_EXT_1, (u64)dma_addr >> 32);
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_BA_0,
+			dma_addr & 0xffffffff);
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_BA_EXT_0,
+			(u64)dma_addr >> 32);
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_BA_1,
+			dma_addr & 0xffffffff);
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_BA_EXT_1,
+			(u64)dma_addr >> 32);
 
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_PICTURE_SIZE,
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_PICTURE_SIZE,
 			(scale.in_w - 1) | ((scale.in_h - 1) << 16));
 
 	/* For YUV422 format we use the macropixel size for pixel inc */
 	if (fourcc == DRM_FORMAT_YUYV || fourcc == DRM_FORMAT_UYVY)
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_PIXEL_INC,
-				pixinc(scale.xinc, cpp * 2));
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_PIXEL_INC, pixinc(scale.xinc, cpp * 2));
 	else
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_PIXEL_INC,
-				pixinc(scale.xinc, cpp));
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_PIXEL_INC, pixinc(scale.xinc, cpp));
 
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_ROW_INC,
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_ROW_INC,
 			pixinc(1 + (scale.yinc * fb_width -
 				    scale.xinc * scale.in_w),
 			       cpp));
@@ -2127,88 +2240,102 @@ void dispc_plane_setup(struct dispc_device *dispc, u32 hw_plane,
 		u32 fb_width_uv = state->fb->pitches[1] / cpp_uv;
 		dma_addr_t p_uv_addr = dispc_plane_state_p_uv_addr(state);
 
-		dispc_vid_write(dispc, hw_plane,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
 				DISPC_VID_BA_UV_0, p_uv_addr & 0xffffffff);
-		dispc_vid_write(dispc, hw_plane,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
 				DISPC_VID_BA_UV_EXT_0, (u64)p_uv_addr >> 32);
-		dispc_vid_write(dispc, hw_plane,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
 				DISPC_VID_BA_UV_1, p_uv_addr & 0xffffffff);
-		dispc_vid_write(dispc, hw_plane,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
 				DISPC_VID_BA_UV_EXT_1, (u64)p_uv_addr >> 32);
 
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_ROW_INC_UV,
+		dispc_vid_write(dispc, hw_dispc_idx, hw_plane, DISPC_VID_ROW_INC_UV,
 				pixinc(1 + (scale.yinc * fb_width_uv -
 					    scale.xinc * scale.in_w_uv),
 				       cpp_uv));
 	}
 
 	if (!lite) {
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_SIZE,
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_SIZE,
 				(state->crtc_w - 1) |
 				((state->crtc_h - 1) << 16));
 
-		dispc_vid_set_scaling(dispc, hw_plane, &scale, fourcc);
+		dispc_vid_set_scaling(dispc, hw_dispc_idx, hw_plane, &scale,
+				      fourcc);
 	}
 
 	/* enable YUV->RGB color conversion */
 	if (dispc_fourcc_is_yuv(fourcc)) {
-		dispc_vid_csc_setup(dispc, hw_plane, state);
-		dispc_vid_csc_enable(dispc, hw_plane, true);
+		dispc_vid_csc_setup(dispc, hw_dipsc_idx, hw_plane, state);
+		dispc_vid_csc_enable(dispc, hw_dipsc_idx, hw_plane, true);
 	} else {
-		dispc_vid_csc_enable(dispc, hw_plane, false);
+		dispc_vid_csc_enable(dispc, hw_dipsc_idx, hw_plane, false);
 	}
 
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_GLOBAL_ALPHA,
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_GLOBAL_ALPHA,
 			0xFF & (state->alpha >> 8));
 
 	if (state->pixel_blend_mode == DRM_MODE_BLEND_PREMULTI)
-		VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES, 1,
-				28, 28);
+		VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_ATTRIBUTES, 1, 28, 28);
 	else
-		VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES, 0,
-				28, 28);
+		VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_ATTRIBUTES, 0, 28, 28);
 }
 
-void dispc_plane_enable(struct dispc_device *dispc, u32 hw_plane, bool enable)
+void dispc_plane_enable(struct dispc_device *dispc, u32 hw_dipsc_idx,
+			u32 hw_plane, bool enable)
 {
-	VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES, !!enable, 0, 0);
+	VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane, DISPC_VID_ATTRIBUTES,
+			!!enable, 0, 0);
 }
 
-static u32 dispc_vid_get_fifo_size(struct dispc_device *dispc, u32 hw_plane)
+static u32 dispc_vid_get_fifo_size(struct dispc_device *dispc, u32 hw_dipsc_idx,
+				   u32 hw_plane)
 {
-	return VID_REG_GET(dispc, hw_plane, DISPC_VID_BUF_SIZE_STATUS, 15, 0);
+	return VID_REG_GET(dispc, hw_dispc_idx, hw_plane,
+			   DISPC_VID_BUF_SIZE_STATUS, 15, 0);
 }
 
 static void dispc_vid_set_mflag_threshold(struct dispc_device *dispc,
-					  u32 hw_plane, u32 low, u32 high)
+					  u32 hw_dipsc_idx, u32 hw_plane,
+					  u32 low, u32 high)
 {
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_MFLAG_THRESHOLD,
+	dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+			DISPC_VID_MFLAG_THRESHOLD,
 			FLD_VAL(high, 31, 16) | FLD_VAL(low, 15, 0));
 }
 
 static void dispc_vid_set_buf_threshold(struct dispc_device *dispc,
-					u32 hw_plane, u32 low, u32 high)
+					u32 hw_dipsc_idx, u32 hw_plane, u32 low,
+					u32 high)
 {
-	dispc_vid_write(dispc, hw_plane, DISPC_VID_BUF_THRESHOLD,
+	dispc_vid_write(dispc, hw_dispc_idx, hw_plane, DISPC_VID_BUF_THRESHOLD,
 			FLD_VAL(high, 31, 16) | FLD_VAL(low, 15, 0));
 }
 
-static void dispc_k2g_plane_init(struct dispc_device *dispc)
+static void dispc_k2g_plane_init(struct dispc_device *dispc, u32 hw_dipsc_idx)
 {
-	unsigned int hw_plane;
+	unsigned int i;
 
 	dev_dbg(dispc->dev, "%s()\n", __func__);
 
 	/* MFLAG_CTRL = ENABLED */
-	REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 2, 1, 0);
+	REG_FLD_MOD(dispc, hw_dipsc_idx, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 2, 1, 0);
 	/* MFLAG_START = MFLAGNORMALSTARTMODE */
-	REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
+	REG_FLD_MOD(dispc, hw_dipsc_idx, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
 
-	for (hw_plane = 0; hw_plane < dispc->feat->num_planes; hw_plane++) {
-		u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
+	for (i = 0; i < dispc->feat->num_planes; i++) {
+		u32 size, hw_plane;
 		u32 thr_low, thr_high;
 		u32 mflag_low, mflag_high;
 		u32 preload;
+
+		if (hw_dipsc_idx != dispc->feat->vid_dispc_idx[i])
+			continue;
+
+		hw_plane = dispc->feat->hw_vid_idx[i];
+		size = dispc_vid_get_fifo_size(dispc, hw_dipsc_idx, hw_plane);
 
 		thr_high = size - 1;
 		thr_low = size / 2;
@@ -2220,50 +2347,57 @@ static void dispc_k2g_plane_init(struct dispc_device *dispc)
 
 		dev_dbg(dispc->dev,
 			"%s: bufsize %u, buf_threshold %u/%u, mflag threshold %u/%u preload %u\n",
-			dispc->feat->vid_name[hw_plane],
+			dispc->feat->vid_name[i],
 			size,
 			thr_high, thr_low,
 			mflag_high, mflag_low,
 			preload);
 
-		dispc_vid_set_buf_threshold(dispc, hw_plane,
+		dispc_vid_set_buf_threshold(dispc, hw_dipsc_idx, hw_plane,
 					    thr_low, thr_high);
-		dispc_vid_set_mflag_threshold(dispc, hw_plane,
+		dispc_vid_set_mflag_threshold(dispc, hw_dipsc_idx, hw_plane,
 					      mflag_low, mflag_high);
 
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_PRELOAD, preload);
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_PRELOAD, preload);
 
 		/*
 		 * Prefetch up to fifo high-threshold value to minimize the
 		 * possibility of underflows. Note that this means the PRELOAD
 		 * register is ignored.
 		 */
-		VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES, 1,
-				19, 19);
+		VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_ATTRIBUTES, 1, 19, 19);
 	}
 }
 
-static void dispc_k3_plane_init(struct dispc_device *dispc)
+static void dispc_k3_plane_init(struct dispc_device *dispc, u32 hw_dipsc_idx)
 {
-	unsigned int hw_plane;
+	unsigned int i;
 	u32 cba_lo_pri = 1;
 	u32 cba_hi_pri = 0;
 
 	dev_dbg(dispc->dev, "%s()\n", __func__);
 
-	REG_FLD_MOD(dispc, DSS_CBA_CFG, cba_lo_pri, 2, 0);
-	REG_FLD_MOD(dispc, DSS_CBA_CFG, cba_hi_pri, 5, 3);
+	REG_FLD_MOD(dispc, hw_dipsc_idx, DSS_CBA_CFG, cba_lo_pri, 2, 0);
+	REG_FLD_MOD(dispc, hw_dipsc_idx, DSS_CBA_CFG, cba_hi_pri, 5, 3);
 
 	/* MFLAG_CTRL = ENABLED */
-	REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 2, 1, 0);
+	REG_FLD_MOD(dispc, hw_dipsc_idx, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 2, 1, 0);
 	/* MFLAG_START = MFLAGNORMALSTARTMODE */
-	REG_FLD_MOD(dispc, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
+	REG_FLD_MOD(dispc, hw_dipsc_idx, DISPC_GLOBAL_MFLAG_ATTRIBUTE, 0, 6, 6);
 
-	for (hw_plane = 0; hw_plane < dispc->feat->num_planes; hw_plane++) {
-		u32 size = dispc_vid_get_fifo_size(dispc, hw_plane);
+	for (i = 0; i < dispc->feat->num_planes; i++) {
+		u32 size, hw_plane;
 		u32 thr_low, thr_high;
 		u32 mflag_low, mflag_high;
 		u32 preload;
+
+		if (hw_dipsc_idx != dispc->feat->vid_dispc_idx[i])
+			continue;
+
+		hw_plane = dispc->feat->hw_vid_idx[i];
+		size = dispc_vid_get_fifo_size(dispc, hw_dipsc_idx, hw_plane);
 
 		thr_high = size - 1;
 		thr_low = size / 2;
@@ -2275,43 +2409,44 @@ static void dispc_k3_plane_init(struct dispc_device *dispc)
 
 		dev_dbg(dispc->dev,
 			"%s: bufsize %u, buf_threshold %u/%u, mflag threshold %u/%u preload %u\n",
-			dispc->feat->vid_name[hw_plane],
+			dispc->feat->vid_name[i],
 			size,
 			thr_high, thr_low,
 			mflag_high, mflag_low,
 			preload);
 
-		dispc_vid_set_buf_threshold(dispc, hw_plane,
+		dispc_vid_set_buf_threshold(dispc, hw_dipsc_idx, hw_plane,
 					    thr_low, thr_high);
-		dispc_vid_set_mflag_threshold(dispc, hw_plane,
+		dispc_vid_set_mflag_threshold(dispc, hw_dipsc_idx, hw_plane,
 					      mflag_low, mflag_high);
 
-		dispc_vid_write(dispc, hw_plane, DISPC_VID_PRELOAD, preload);
+		dispc_vid_write(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_PRELOAD, preload);
 
 		/* Prefech up to PRELOAD value */
-		VID_REG_FLD_MOD(dispc, hw_plane, DISPC_VID_ATTRIBUTES, 0,
-				19, 19);
+		VID_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_plane,
+				DISPC_VID_ATTRIBUTES, 0, 19, 19);
 	}
 }
 
-static void dispc_plane_init(struct dispc_device *dispc)
+static void dispc_plane_init(struct dispc_device *dispc, u32 hw_dipsc_idx)
 {
 	switch (dispc->feat->subrev) {
 	case DISPC_K2G:
-		dispc_k2g_plane_init(dispc);
+		dispc_k2g_plane_init(dispc, hw_dipsc_idx);
 		break;
 	case DISPC_AM625:
 	case DISPC_AM62A7:
 	case DISPC_AM65X:
 	case DISPC_J721E:
-		dispc_k3_plane_init(dispc);
+		dispc_k3_plane_init(dispc, hw_dipsc_idx);
 		break;
 	default:
 		WARN_ON(1);
 	}
 }
 
-static void dispc_vp_init(struct dispc_device *dispc)
+static void dispc_vp_init(struct dispc_device *dispc, u32 hw_dipsc_idx)
 {
 	unsigned int i;
 
@@ -2319,17 +2454,20 @@ static void dispc_vp_init(struct dispc_device *dispc)
 
 	/* Enable the gamma Shadow bit-field for all VPs*/
 	for (i = 0; i < dispc->feat->num_vps; i++)
-		VP_REG_FLD_MOD(dispc, i, DISPC_VP_CONFIG, 1, 2, 2);
+		if (hw_dipsc_idx == dispc->feat->vp_dispc_idx[i])
+			VP_REG_FLD_MOD(dispc, hw_dipsc_idx,
+				       dispc->feat->hw_vp_idx[i],
+				       DISPC_VP_CONFIG, 1, 2, 2);
 }
 
-static void dispc_initial_config(struct dispc_device *dispc)
+static void dispc_initial_config(struct dispc_device *dispc, u32 hw_dipsc_idx)
 {
-	dispc_plane_init(dispc);
-	dispc_vp_init(dispc);
+	dispc_plane_init(dispc, hw_dipsc_idx);
+	dispc_vp_init(dispc, hw_dipsc_idx);
 
 	/* Note: Hardcoded DPI routing on J721E for now */
 	if (dispc->feat->subrev == DISPC_J721E) {
-		dispc_write(dispc, DISPC_CONNECTIONS,
+		dispc_write(dispc, hw_dipsc_idx, DISPC_CONNECTIONS,
 			    FLD_VAL(2, 3, 0) |		/* VP1 to DPI0 */
 			    FLD_VAL(8, 7, 4)		/* VP3 to DPI1 */
 			);
@@ -2337,13 +2475,14 @@ static void dispc_initial_config(struct dispc_device *dispc)
 }
 
 static void dispc_k2g_vp_write_gamma_table(struct dispc_device *dispc,
-					   u32 hw_videoport)
+					   u32 hw_dipsc_idx, u32 hw_videoport)
 {
-	u32 *table = dispc->vp_data[hw_videoport].gamma_table;
+	u32 *table = dispc->vp_data[hw_dipsc_idx][hw_videoport].gamma_table;
 	u32 hwlen = dispc->feat->vp_feat.color.gamma_size;
 	unsigned int i;
 
-	dev_dbg(dispc->dev, "%s: hw_videoport %d\n", __func__, hw_videoport);
+	dev_dbg(dispc->dev, "%s: hw_dipsc_idx %d: hw_videoport %d\n", __func__,
+		hw_dipsc_idx, hw_videoport);
 
 	if (WARN_ON(dispc->feat->vp_feat.color.gamma_type != TIDSS_GAMMA_8BIT))
 		return;
@@ -2353,8 +2492,8 @@ static void dispc_k2g_vp_write_gamma_table(struct dispc_device *dispc,
 
 		v |= i << 24;
 
-		dispc_vp_write(dispc, hw_videoport, DISPC_VP_K2G_GAMMA_TABLE,
-			       v);
+		dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport,
+			       DISPC_VP_K2G_GAMMA_TABLE, v);
 	}
 }
 
@@ -2365,7 +2504,8 @@ static void dispc_am65x_vp_write_gamma_table(struct dispc_device *dispc,
 	u32 hwlen = dispc->feat->vp_feat.color.gamma_size;
 	unsigned int i;
 
-	dev_dbg(dispc->dev, "%s: hw_videoport %d\n", __func__, hw_videoport);
+	dev_dbg(dispc->dev, "%s: hw_dipsc_idx %d: hw_videoport %d\n", __func__,
+		hw_dipsc_idx, hw_videoport);
 
 	if (WARN_ON(dispc->feat->vp_feat.color.gamma_type != TIDSS_GAMMA_8BIT))
 		return;
@@ -2375,18 +2515,20 @@ static void dispc_am65x_vp_write_gamma_table(struct dispc_device *dispc,
 
 		v |= i << 24;
 
-		dispc_vp_write(dispc, hw_videoport, DISPC_VP_GAMMA_TABLE, v);
+		dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport,
+			       DISPC_VP_GAMMA_TABLE, v);
 	}
 }
 
 static void dispc_j721e_vp_write_gamma_table(struct dispc_device *dispc,
-					     u32 hw_videoport)
+					     u32 hw_dipsc_idx, u32 hw_videoport)
 {
-	u32 *table = dispc->vp_data[hw_videoport].gamma_table;
+	u32 *table = dispc->vp_data[hw_dipsc_idx][hw_videoport].gamma_table;
 	u32 hwlen = dispc->feat->vp_feat.color.gamma_size;
 	unsigned int i;
 
-	dev_dbg(dispc->dev, "%s: hw_videoport %d\n", __func__, hw_videoport);
+	dev_dbg(dispc->dev, "%s: hw_dipsc_idx %d: hw_videoport %d\n", __func__,
+		hw_dipsc_idx, hw_videoport);
 
 	if (WARN_ON(dispc->feat->vp_feat.color.gamma_type != TIDSS_GAMMA_10BIT))
 		return;
@@ -2397,24 +2539,27 @@ static void dispc_j721e_vp_write_gamma_table(struct dispc_device *dispc,
 		if (i == 0)
 			v |= 1 << 31;
 
-		dispc_vp_write(dispc, hw_videoport, DISPC_VP_GAMMA_TABLE, v);
+		dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_GAMMA_TABLE, v);
 	}
 }
 
 static void dispc_vp_write_gamma_table(struct dispc_device *dispc,
-				       u32 hw_videoport)
+				       u32 hw_dipsc_idx, u32 hw_videoport)
 {
 	switch (dispc->feat->subrev) {
 	case DISPC_K2G:
-		dispc_k2g_vp_write_gamma_table(dispc, hw_videoport);
+		dispc_k2g_vp_write_gamma_table(dispc, hw_dipsc_idx,
+					       hw_videoport);
 		break;
 	case DISPC_AM625:
 	case DISPC_AM62A7:
 	case DISPC_AM65X:
-		dispc_am65x_vp_write_gamma_table(dispc, hw_videoport);
+		dispc_am65x_vp_write_gamma_table(dispc, hw_dipsc_idx,
+						 hw_videoport);
 		break;
 	case DISPC_J721E:
-		dispc_j721e_vp_write_gamma_table(dispc, hw_videoport);
+		dispc_j721e_vp_write_gamma_table(dispc, hw_dipsc_idx,
+						 hw_videoport);
 		break;
 	default:
 		WARN_ON(1);
@@ -2427,18 +2572,19 @@ static const struct drm_color_lut dispc_vp_gamma_default_lut[] = {
 	{ .red = U16_MAX, .green = U16_MAX, .blue = U16_MAX, },
 };
 
-static void dispc_vp_set_gamma(struct dispc_device *dispc,
+static void dispc_vp_set_gamma(struct dispc_device *dispc, u32 hw_dipsc_idx,
 			       u32 hw_videoport,
 			       const struct drm_color_lut *lut,
 			       unsigned int length)
 {
-	u32 *table = dispc->vp_data[hw_videoport].gamma_table;
+	u32 *table = dispc->vp_data[hw_dipsc_idx][hw_videoport].gamma_table;
 	u32 hwlen = dispc->feat->vp_feat.color.gamma_size;
 	u32 hwbits;
 	unsigned int i;
 
-	dev_dbg(dispc->dev, "%s: hw_videoport %d, lut len %u, hw len %u\n",
-		__func__, hw_videoport, length, hwlen);
+	dev_dbg(dispc->dev,
+		"%s: hw_dipsc_idx: %d hw_videoport %d, lut len %u, hw len %u\n",
+		__func__, hw_dipsc_idx, hw_videoport, length, hwlen);
 
 	if (dispc->feat->vp_feat.color.gamma_type == TIDSS_GAMMA_10BIT)
 		hwbits = 10;
@@ -2474,7 +2620,7 @@ static void dispc_vp_set_gamma(struct dispc_device *dispc,
 		}
 	}
 
-	dispc_vp_write_gamma_table(dispc, hw_videoport);
+	dispc_vp_write_gamma_table(dispc, hw_dipsc_idx, hw_videoport);
 }
 
 static s16 dispc_S31_32_to_s2_8(s64 coef)
@@ -2521,7 +2667,8 @@ static void dispc_k2g_vp_csc_cpr_regval(const struct dispc_csc_coef *csc,
 
 #undef CVAL
 
-static void dispc_k2g_vp_write_csc(struct dispc_device *dispc, u32 hw_videoport,
+static void dispc_k2g_vp_write_csc(struct dispc_device *dispc, u32 hw_dipsc_idx,
+				   u32 hw_videoport,
 				   const struct dispc_csc_coef *csc)
 {
 	static const u16 dispc_vp_cpr_coef_reg[] = {
@@ -2534,12 +2681,12 @@ static void dispc_k2g_vp_write_csc(struct dispc_device *dispc, u32 hw_videoport,
 	dispc_k2g_vp_csc_cpr_regval(csc, regval);
 
 	for (i = 0; i < ARRAY_SIZE(dispc_vp_cpr_coef_reg); i++)
-		dispc_vp_write(dispc, hw_videoport, dispc_vp_cpr_coef_reg[i],
-			       regval[i]);
+		dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport,
+			       dispc_vp_cpr_coef_reg[i], regval[i]);
 }
 
-static void dispc_k2g_vp_set_ctm(struct dispc_device *dispc, u32 hw_videoport,
-				 struct drm_color_ctm *ctm)
+static void dispc_k2g_vp_set_ctm(struct dispc_device *dispc, u32 hw_dipsc_idx,
+				 u32 hw_videoport, struct drm_color_ctm *ctm)
 {
 	u32 cprenable = 0;
 
@@ -2547,11 +2694,11 @@ static void dispc_k2g_vp_set_ctm(struct dispc_device *dispc, u32 hw_videoport,
 		struct dispc_csc_coef cpr;
 
 		dispc_k2g_cpr_from_ctm(ctm, &cpr);
-		dispc_k2g_vp_write_csc(dispc, hw_videoport, &cpr);
+		dispc_k2g_vp_write_csc(dispc, hw_dipsc_idx, hw_videoport, &cpr);
 		cprenable = 1;
 	}
 
-	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONFIG,
+	VP_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_CONFIG,
 		       cprenable, 15, 15);
 }
 
@@ -2586,7 +2733,8 @@ static void dispc_csc_from_ctm(const struct drm_color_ctm *ctm,
 	cpr->m[CSC_BB] = dispc_S31_32_to_s3_8(ctm->matrix[8]);
 }
 
-static void dispc_k3_vp_write_csc(struct dispc_device *dispc, u32 hw_videoport,
+static void dispc_k3_vp_write_csc(struct dispc_device *dispc, u32 hw_dipsc_idx,
+				  u32 hw_videoport,
 				  const struct dispc_csc_coef *csc)
 {
 	static const u16 dispc_vp_csc_coef_reg[DISPC_CSC_REGVAL_LEN] = {
@@ -2600,8 +2748,8 @@ static void dispc_k3_vp_write_csc(struct dispc_device *dispc, u32 hw_videoport,
 	csc->to_regval(csc, regval);
 
 	for (i = 0; i < ARRAY_SIZE(regval); i++)
-		dispc_vp_write(dispc, hw_videoport, dispc_vp_csc_coef_reg[i],
-			       regval[i]);
+		dispc_vp_write(dispc, hw_dipsc_idx, hw_videoport,
+			       dispc_vp_csc_coef_reg[i], regval[i]);
 }
 
 static void dispc_k3_vp_set_ctm(struct dispc_device *dispc, u32 hw_videoport,
@@ -2613,16 +2761,16 @@ static void dispc_k3_vp_set_ctm(struct dispc_device *dispc, u32 hw_videoport,
 		struct dispc_csc_coef csc;
 
 		dispc_csc_from_ctm(ctm, &csc);
-		dispc_k3_vp_write_csc(dispc, hw_videoport, &csc);
+		dispc_k3_vp_write_csc(dispc, hw_dipsc_idx, hw_videoport, &csc);
 		colorconvenable = 1;
 	}
 
-	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONFIG,
+	VP_REG_FLD_MOD(dispc, hw_dipsc_idx, hw_videoport, DISPC_VP_CONFIG,
 		       colorconvenable, 24, 24);
 }
 
 static void dispc_vp_set_color_mgmt(struct dispc_device *dispc,
-				    u32 hw_videoport,
+				    u32 hw_dipsc_idx, u32 hw_videoport,
 				    const struct drm_crtc_state *state,
 				    bool newmodeset)
 {
@@ -2638,22 +2786,23 @@ static void dispc_vp_set_color_mgmt(struct dispc_device *dispc,
 		length = state->gamma_lut->length / sizeof(*lut);
 	}
 
-	dispc_vp_set_gamma(dispc, hw_videoport, lut, length);
+	dispc_vp_set_gamma(dispc, hw_dipsc_idx, hw_videoport, lut, length);
 
 	if (state->ctm)
 		ctm = (struct drm_color_ctm *)state->ctm->data;
 
 	if (dispc->feat->subrev == DISPC_K2G)
-		dispc_k2g_vp_set_ctm(dispc, hw_videoport, ctm);
+		dispc_k2g_vp_set_ctm(dispc, hw_dipsc_idx, hw_videoport, ctm);
 	else
-		dispc_k3_vp_set_ctm(dispc, hw_videoport, ctm);
+		dispc_k3_vp_set_ctm(dispc, hw_dipsc_idx, hw_videoport, ctm);
 }
 
-void dispc_vp_setup(struct dispc_device *dispc, u32 hw_videoport,
-		    const struct drm_crtc_state *state, bool newmodeset)
+void dispc_vp_setup(struct dispc_device *dispc, u32 hw_dipsc_idx,
+		    u32 hw_videoport, const struct drm_crtc_state *state,
+		    bool newmodeset)
 {
-	dispc_vp_set_default_color(dispc, hw_videoport, 0);
-	dispc_vp_set_color_mgmt(dispc, hw_videoport, state, newmodeset);
+	dispc_vp_set_default_color(dispc, hw_dipsc_idx, hw_videoport, 0);
+	dispc_vp_set_color_mgmt(dispc, hw_dipsc_idx, hw_videoport, state, newmodeset);
 }
 
 int dispc_runtime_suspend(struct dispc_device *dispc)
@@ -2662,7 +2811,8 @@ int dispc_runtime_suspend(struct dispc_device *dispc)
 
 	dispc->is_enabled = false;
 
-	clk_disable_unprepare(dispc->fclk);
+	for (int i = 0; i < dispc->feat->num_dispcs; i++)
+		clk_disable_unprepare(dispc->fclk[i]);
 
 	return 0;
 }
@@ -2671,30 +2821,34 @@ int dispc_runtime_resume(struct dispc_device *dispc)
 {
 	dev_dbg(dispc->dev, "resume\n");
 
-	clk_prepare_enable(dispc->fclk);
+	for (int i = 0; i < dispc->feat->num_dispcs; i++) {
+		clk_prepare_enable(dispc->fclk[i]);
 
-	if (REG_GET(dispc, DSS_SYSSTATUS, 0, 0) == 0)
-		dev_warn(dispc->dev, "DSS FUNC RESET not done!\n");
+		if (REG_GET(dispc, i, DSS_SYSSTATUS, 0, 0) == 0)
+			dev_warn(dispc->dev,
+				 "DSS dispc %d: FUNC RESET not done!\n", i);
 
-	dev_dbg(dispc->dev, "OMAP DSS7 rev 0x%x\n",
-		dispc_read(dispc, DSS_REVISION));
+		dev_dbg(dispc->dev, "OMAP DSS7 dispc %d: rev 0x%x\n", i,
+			dispc_read(dispc, i, DSS_REVISION));
 
-	dev_dbg(dispc->dev, "VP RESETDONE %d,%d,%d\n",
-		REG_GET(dispc, DSS_SYSSTATUS, 1, 1),
-		REG_GET(dispc, DSS_SYSSTATUS, 2, 2),
-		REG_GET(dispc, DSS_SYSSTATUS, 3, 3));
+		dev_dbg(dispc->dev, "dispc %d: VP RESETDONE %d,%d,%d\n", i,
+			REG_GET(dispc, i, DSS_SYSSTATUS, 1, 1),
+			REG_GET(dispc, i, DSS_SYSSTATUS, 2, 2),
+			REG_GET(dispc, i, DSS_SYSSTATUS, 3, 3));
 
-	if (dispc->feat->subrev == DISPC_AM625 ||
-	    dispc->feat->subrev == DISPC_AM65X)
-		dev_dbg(dispc->dev, "OLDI RESETDONE %d,%d,%d\n",
-			REG_GET(dispc, DSS_SYSSTATUS, 5, 5),
-			REG_GET(dispc, DSS_SYSSTATUS, 6, 6),
-			REG_GET(dispc, DSS_SYSSTATUS, 7, 7));
+		if (dispc->feat->subrev == DISPC_AM625 ||
+		    dispc->feat->subrev == DISPC_AM65X)
+			dev_dbg(dispc->dev,
+				"dispc %d: OLDI RESETDONE %d,%d,%d\n", i,
+				REG_GET(dispc, i, DSS_SYSSTATUS, 5, 5),
+				REG_GET(dispc, i, DSS_SYSSTATUS, 6, 6),
+				REG_GET(dispc, i, DSS_SYSSTATUS, 7, 7));
 
-	dev_dbg(dispc->dev, "DISPC IDLE %d\n",
-		REG_GET(dispc, DSS_SYSSTATUS, 9, 9));
+		dev_dbg(dispc->dev, "DISPC %d: IDLE %d\n", i,
+			REG_GET(dispc, i, DSS_SYSSTATUS, 9, 9));
 
-	dispc_initial_config(dispc);
+		dispc_initial_config(dispc, i);
+	}
 
 	dispc->is_enabled = true;
 
@@ -2755,7 +2909,7 @@ static void dispc_init_errata(struct dispc_device *dispc)
 	}
 }
 
-static void dispc_softreset(struct dispc_device *dispc)
+static void dispc_softreset(struct dispc_device *dispc, u32 hw_dispc_idx)
 {
 	u32 val;
 	int ret = 0;
@@ -2776,6 +2930,7 @@ int dispc_init(struct tidss_device *tidss)
 	struct dispc_device *dispc;
 	const struct dispc_features *feat;
 	unsigned int i, num_fourccs;
+	unsigned int a, b;
 	int r = 0;
 
 	dev_dbg(dev, "%s\n", __func__);
@@ -2818,34 +2973,44 @@ int dispc_init(struct tidss_device *tidss)
 
 	dispc_common_regmap = dispc->feat->common_regs;
 
-	r = dispc_iomap_resource(pdev, dispc->feat->common,
-				 &dispc->base_common);
-	if (r)
-		return r;
+	for (i = 0; i < dispc->feat->num_dispcs; i++) {
+		r = dispc_iomap_resource(pdev, dispc->feat->common[i],
+					 &dispc->base_common[i]);
+		if (r)
+			return r;
+	}
 
 	for (i = 0; i < dispc->feat->num_planes; i++) {
+		a = dispc->feat->vid_dispc_idx[i];
+		b = dispc->feat->hw_vid_idx[i];
+
 		r = dispc_iomap_resource(pdev, dispc->feat->vid_name[i],
-					 &dispc->base_vid[i]);
+					 &dispc->base_vid[a][b]);
 		if (r)
 			return r;
 	}
 
 	/* K2G display controller does not support soft reset */
-	if (feat->subrev != DISPC_K2G)
-		dispc_softreset(dispc);
+	if (feat->subrev != DISPC_K2G) {
+		for (i = 0; i < dispc->feat->num_dispcs; i++)
+			dispc_softreset(dispc, i);
+	}
 
 	for (i = 0; i < dispc->feat->num_vps; i++) {
 		u32 gamma_size = dispc->feat->vp_feat.color.gamma_size;
 		u32 *gamma_table;
 		struct clk *clk;
 
+		a = dispc->feat->vp_dispc_idx[i];
+		b = dispc->feat->hw_vp_idx[i];
+
 		r = dispc_iomap_resource(pdev, dispc->feat->ovr_name[i],
-					 &dispc->base_ovr[i]);
+					 &dispc->base_ovr[a][b]);
 		if (r)
 			return r;
 
 		r = dispc_iomap_resource(pdev, dispc->feat->vp_name[i],
-					 &dispc->base_vp[i]);
+					 &dispc->base_vp[a][b]);
 		if (r)
 			return r;
 
@@ -2855,14 +3020,14 @@ int dispc_init(struct tidss_device *tidss)
 				dispc->feat->vpclk_name[i], PTR_ERR(clk));
 			return PTR_ERR(clk);
 		}
-		dispc->vp_clk[i] = clk;
+		dispc->vp_clk[a][b] = clk;
 
 		gamma_table = devm_kmalloc_array(dev, gamma_size,
 						 sizeof(*gamma_table),
 						 GFP_KERNEL);
 		if (!gamma_table)
 			return -ENOMEM;
-		dispc->vp_data[i].gamma_table = gamma_table;
+		dispc->vp_data[a][b].gamma_table = gamma_table;
 	}
 
 	if (feat->subrev == DISPC_AM65X) {
@@ -2871,13 +3036,15 @@ int dispc_init(struct tidss_device *tidss)
 			return r;
 	}
 
-	dispc->fclk = devm_clk_get(dev, "fck");
-	if (IS_ERR(dispc->fclk)) {
-		dev_err(dev, "%s: Failed to get fclk: %ld\n",
-			__func__, PTR_ERR(dispc->fclk));
-		return PTR_ERR(dispc->fclk);
+	for (i = 0; i < dispc->feat->num_dispcs; i++) {
+		dispc->fclk[i] = devm_clk_get(dev, dispc->feat->fclk_name[i]);
+		if (IS_ERR(dispc->fclk[i])) {
+			dev_err(dev, "%s: Failed to get fclk: %ld\n",
+				__func__, PTR_ERR(dispc->fclk[i]));
+			return PTR_ERR(dispc->fclk[i]);
+		}
+		dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk[i]));
 	}
-	dev_dbg(dev, "DSS fclk %lu Hz\n", clk_get_rate(dispc->fclk));
 
 	of_property_read_u32(dispc->dev->of_node, "max-memory-bandwidth",
 			     &dispc->memory_bandwidth_limit);

@@ -21,6 +21,8 @@ struct tidss_crtc {
 
 	u32 hw_videoport;
 
+	u32 hw_dipsc_idx;
+
 	struct drm_pending_vblank_event *event;
 
 	struct completion framedone_completion;
@@ -43,6 +45,6 @@ void tidss_crtc_framedone_irq(struct drm_crtc *crtc);
 void tidss_crtc_error_irq(struct drm_crtc *crtc, u64 irqstatus);
 
 struct tidss_crtc *tidss_crtc_create(struct tidss_device *tidss,
-				     u32 hw_videoport,
+				     u32 hw_dipsc_idx, u32 hw_videoport,
 				     struct drm_plane *primary);
 #endif

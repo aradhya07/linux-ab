@@ -11,6 +11,7 @@
 
 #define TIDSS_MAX_PORTS 4
 #define TIDSS_MAX_PLANES 4
+#define TIDSS_MAX_DISPCS 2
 
 typedef u32 dispc_irq_t;
 
@@ -22,15 +23,15 @@ struct tidss_device {
 	struct dispc_device *dispc;
 
 	unsigned int num_crtcs;
-	struct drm_crtc *crtcs[TIDSS_MAX_PORTS];
+	struct drm_crtc *crtcs[TIDSS_MAX_DISPCS][TIDSS_MAX_PORTS];
 
 	unsigned int num_planes;
-	struct drm_plane *planes[TIDSS_MAX_PLANES];
+	struct drm_plane *planes[TIDSS_MAX_DISPCS][TIDSS_MAX_PLANES];
 
-	unsigned int irq;
+	unsigned int irq[TIDSS_MAX_DISPCS];
 
 	spinlock_t wait_lock;	/* protects the irq masks */
-	dispc_irq_t irq_mask;	/* enabled irqs in addition to wait_list */
+	dispc_irq_t irq_mask[TIDSS_MAX_DISPCS];	/* enabled irqs in addition to wait_list */
 };
 
 #define to_tidss(__dev) container_of(__dev, struct tidss_device, ddev)

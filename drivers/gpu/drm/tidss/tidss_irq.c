@@ -16,11 +16,12 @@
 #include "tidss_plane.h"
 
 /* call with wait_lock and dispc runtime held */
-static void tidss_irq_update(struct tidss_device *tidss)
+static void tidss_irq_update(struct tidss_device *tidss, u32 dispc_idx)
 {
 	assert_spin_locked(&tidss->wait_lock);
 
-	dispc_set_irqenable(tidss->dispc, tidss->irq_mask);
+	dispc_set_irqenable(tidss->dispc, dispc_idx,
+			    tidss->irq_mask[dispc_idx]);
 }
 
 void tidss_irq_enable_vblank(struct drm_crtc *crtc)
@@ -29,12 +30,13 @@ void tidss_irq_enable_vblank(struct drm_crtc *crtc)
 	struct tidss_device *tidss = to_tidss(ddev);
 	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
 	u32 hw_videoport = tcrtc->hw_videoport;
+	u32 hw_dispc_idx = tcrtc->hw_dipsc_idx;
 	unsigned long flags;
 
 	spin_lock_irqsave(&tidss->wait_lock, flags);
-	tidss->irq_mask |= DSS_IRQ_VP_VSYNC_EVEN(hw_videoport) |
-			   DSS_IRQ_VP_VSYNC_ODD(hw_videoport);
-	tidss_irq_update(tidss);
+	tidss->irq_mask[hw_dispc_idx] |= DSS_IRQ_VP_VSYNC_EVEN(hw_videoport) |
+					 DSS_IRQ_VP_VSYNC_ODD(hw_videoport);
+	tidss_irq_update(tidss, hw_dispc_idx);
 	spin_unlock_irqrestore(&tidss->wait_lock, flags);
 }
 
@@ -44,12 +46,13 @@ void tidss_irq_disable_vblank(struct drm_crtc *crtc)
 	struct tidss_device *tidss = to_tidss(ddev);
 	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
 	u32 hw_videoport = tcrtc->hw_videoport;
+	u32 hw_dispc_idx = tcrtc->hw_dipsc_idx;
 	unsigned long flags;
 
 	spin_lock_irqsave(&tidss->wait_lock, flags);
-	tidss->irq_mask &= ~(DSS_IRQ_VP_VSYNC_EVEN(hw_videoport) |
-			     DSS_IRQ_VP_VSYNC_ODD(hw_videoport));
-	tidss_irq_update(tidss);
+	tidss->irq_mask[hw_dispc_idx] &= ~(DSS_IRQ_VP_VSYNC_EVEN(hw_videoport) |
+					   DSS_IRQ_VP_VSYNC_ODD(hw_videoport));
+	tidss_irq_update(tidss, hw_dipsc_idx);
 	spin_unlock_irqrestore(&tidss->wait_lock, flags);
 }
 
@@ -59,13 +62,15 @@ static irqreturn_t tidss_irq_handler(int irq, void *arg)
 	struct tidss_device *tidss = to_tidss(ddev);
 	unsigned int id;
 	dispc_irq_t irqstatus;
+	u32 hw_dispc_idx = tcrtc->hw_dipsc_idx;
 
-	irqstatus = dispc_read_and_clear_irqstatus(tidss->dispc);
+	irqstatus = dispc_read_and_clear_irqstatus(tidss->dispc, hw_dispc_idx);
 
 	for (id = 0; id < tidss->num_crtcs; id++) {
-		struct drm_crtc *crtc = tidss->crtcs[id];
+		struct drm_crtc *crtc = tidss->crtcs[hw_dispc_idx][id];
 		struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
 		u32 hw_videoport = tcrtc->hw_videoport;
+		u32 hw_dispc_idx = tcrtc->hw_dipsc_idx;
 
 		if (irqstatus & (DSS_IRQ_VP_VSYNC_EVEN(hw_videoport) |
 				 DSS_IRQ_VP_VSYNC_ODD(hw_videoport)))

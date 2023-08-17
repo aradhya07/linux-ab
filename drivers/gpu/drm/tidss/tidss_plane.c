@@ -30,6 +30,7 @@ static int tidss_plane_atomic_check(struct drm_plane *plane,
 	const struct drm_format_info *finfo;
 	struct drm_crtc_state *crtc_state;
 	u32 hw_plane = tplane->hw_plane_id;
+	u32 hw_dipsc_idx = tplane->hw_dipsc_idx;
 	u32 hw_videoport;
 	int ret;
 
@@ -97,6 +98,7 @@ static int tidss_plane_atomic_check(struct drm_plane *plane,
 
 	hw_videoport = to_tidss_crtc(new_plane_state->crtc)->hw_videoport;
 
+	// Add hw_dipsc_idx here
 	ret = dispc_plane_check(tidss->dispc, hw_plane, new_plane_state,
 				hw_videoport);
 	if (ret)
@@ -118,12 +120,14 @@ static void tidss_plane_atomic_update(struct drm_plane *plane,
 	dev_dbg(ddev->dev, "%s\n", __func__);
 
 	if (!new_state->visible) {
+		// Add hw_dipsc_idx here
 		dispc_plane_enable(tidss->dispc, tplane->hw_plane_id, false);
 		return;
 	}
 
 	hw_videoport = to_tidss_crtc(new_state->crtc)->hw_videoport;
 
+	// Add hw_dipsc_idx here
 	dispc_plane_setup(tidss->dispc, tplane->hw_plane_id, new_state, hw_videoport);
 }
 
@@ -136,6 +140,7 @@ static void tidss_plane_atomic_enable(struct drm_plane *plane,
 
 	dev_dbg(ddev->dev, "%s\n", __func__);
 
+	// Add hw_dipsc_idx here
 	dispc_plane_enable(tidss->dispc, tplane->hw_plane_id, true);
 }
 
@@ -148,6 +153,7 @@ static void tidss_plane_atomic_disable(struct drm_plane *plane,
 
 	dev_dbg(ddev->dev, "%s\n", __func__);
 
+	// Add hw_dipsc_idx here
 	dispc_plane_enable(tidss->dispc, tplane->hw_plane_id, false);
 }
 
@@ -176,9 +182,9 @@ static const struct drm_plane_funcs tidss_plane_funcs = {
 };
 
 struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
-				       u32 hw_plane_id, u32 plane_type,
-				       u32 crtc_mask, const u32 *formats,
-				       u32 num_formats)
+				       u32 hw_dispc_idx, u32 hw_plane_id,
+				       u32 plane_type, u32 crtc_mask,
+				       const u32 *formats, u32 num_formats)
 {
 	struct tidss_plane *tplane;
 	enum drm_plane_type type;
@@ -199,6 +205,7 @@ struct tidss_plane *tidss_plane_create(struct tidss_device *tidss,
 		return ERR_PTR(-ENOMEM);
 
 	tplane->hw_plane_id = hw_plane_id;
+	tplane->hw_dipsc_idx = hw_dispc_idx;
 
 	possible_crtcs = crtc_mask;
 	type = plane_type;

@@ -109,12 +109,13 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 	struct device *dev = tidss->dev;
 	unsigned int fourccs_len;
 	const u32 *fourccs = dispc_plane_formats(tidss->dispc, &fourccs_len);
-	unsigned int i;
+	unsigned int i, j;
 
 	struct pipe {
 		u32 hw_videoport;
 		struct drm_bridge *bridge;
 		u32 enc_type;
+		u32 hw_dispc_idx;
 	};
 
 	const struct dispc_features *feat = tidss->feat;
@@ -123,7 +124,7 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 
 	struct pipe pipes[TIDSS_MAX_PORTS];
 	u32 num_pipes = 0;
-	u32 crtc_mask;
+	u32 crtc_masks[TIDSS_MAX_DISPCS];
 
 	/* first find all the connected panels & bridges */
 
@@ -179,14 +180,29 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 			}
 		}
 
-		pipes[num_pipes].hw_videoport = i;
+		pipes[num_pipes].hw_videoport = feat->hw_vp_idx[i];
 		pipes[num_pipes].bridge = bridge;
 		pipes[num_pipes].enc_type = enc_type;
+		pipes[num_pipes].hw_dipsc_idx = feat->vp_dispc_idx[i];
 		num_pipes++;
 	}
 
-	/* all planes can be on any crtc */
-	crtc_mask = (1 << num_pipes) - 1;
+	/*
+	 * All planes can be on any crtc if num_dispcs = 1.
+	 * If num_dispcs > 1, then it is assumed that all dispcs are same in
+	 * structure and have equal number of pipes/vps. But the video pipeline
+	 * of one dispc can not overlay on top of the video pipeline of any
+	 * other dispc.
+	 */
+	for (i = 0; i < feat->num_dispcs; i++) {
+		u32 num_pipes_in_dispc = 0;
+
+		for (j = 0; j < num_pipes; j++)
+			if (i == pipes[j].hw_dipsc_idx)
+				num_pipes_in_dispc++;
+
+		crtc_mask[i] = ((1 << (num_pipes_in_dispc)) -1) << (i * feat->num_vps);
+	}
 
 	/* then create a plane, a crtc and an encoder for each panel/bridge */
 
@@ -194,11 +210,13 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 		struct tidss_plane *tplane;
 		struct tidss_crtc *tcrtc;
 		u32 hw_plane_id = feat->vid_order[tidss->num_planes];
+		u32 hw_dipsc_idx = feat->vid_dispc_idx[tidss->num_planes];
 		int ret;
 
-		tplane = tidss_plane_create(tidss, hw_plane_id,
-					    DRM_PLANE_TYPE_PRIMARY, crtc_mask,
-					    fourccs, fourccs_len);
+		tplane = tidss_plane_create(tidss, hw_dispc_idx, hw_plane_id,
+					    DRM_PLANE_TYPE_PRIMARY,
+					    crtc_mask[hw_dipsc_idx], fourccs,
+					    fourccs_len);
 		if (IS_ERR(tplane)) {
 			dev_err(tidss->dev, "plane create failed\n");
 			return PTR_ERR(tplane);
@@ -206,7 +224,8 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 
 		tidss->planes[tidss->num_planes++] = &tplane->plane;
 
-		tcrtc = tidss_crtc_create(tidss, pipes[i].hw_videoport,
+		tcrtc = tidss_crtc_create(tidss, hw_dipsc_idx,
+					  pipes[i].hw_videoport,
 					  &tplane->plane);
 		if (IS_ERR(tcrtc)) {
 			dev_err(tidss->dev, "crtc create failed\n");
@@ -230,7 +249,7 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 		struct tidss_plane *tplane;
 		u32 hw_plane_id = feat->vid_order[tidss->num_planes];
 
-		tplane = tidss_plane_create(tidss, hw_plane_id,
+		tplane = tidss_plane_create(tidss, hw_dispc_idx, hw_plane_id,
 					    DRM_PLANE_TYPE_OVERLAY, crtc_mask,
 					    fourccs, fourccs_len);
 
