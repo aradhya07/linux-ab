@@ -402,10 +402,8 @@
 
 	main_i2c4_pins_default: main-i2c4-pins-default {
 		pinctrl-single,pins = <
-			J721E_IOPAD(0x1e0, PIN_INPUT_PULLUP, 2) /* (Y5) SPI1_D0.I2C4_SCL */
-			J721E_IOPAD(0x1dc, PIN_INPUT_PULLUP, 2) /* (Y1) SPI1_CLK.I2C4_SDA */
-			J721E_IOPAD(0x30, PIN_INPUT, 7) /* (AF24) PRG1_PRU0_GPO11.GPIO0_12 */
-			J721E_IOPAD(0x34, PIN_INPUT, 7) /* (AJ24) PRG1_PRU0_GPO12.GPIO0_13 */
+			J721E_IOPAD(0xa8, PIN_INPUT_PULLUP, 2) /* (AD19) PRG1_MDIO0_MDIO.I2C4_SCL */
+			J721E_IOPAD(0xac, PIN_INPUT_PULLUP, 2) /* (AD18) PRG1_MDIO0_MDC.I2C4_SDA */
 		>;
 	};
 
@@ -834,7 +832,9 @@
 };
 
 &dss_ports {
-	port {
+	port@0 {
+		reg = <0>;
+
 		dpi0_out: endpoint {
 			remote-endpoint = <&dp0_in>;
 		};
