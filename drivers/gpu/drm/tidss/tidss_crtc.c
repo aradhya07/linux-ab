@@ -216,22 +216,10 @@ static void tidss_crtc_atomic_enable(struct drm_crtc *crtc,
 	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
 	struct drm_device *ddev = crtc->dev;
 	struct tidss_device *tidss = to_tidss(ddev);
-	const struct drm_display_mode *mode = &crtc->state->adjusted_mode;
-	unsigned long flags;
-	int r;
 
 	dev_dbg(ddev->dev, "%s, event %p\n", __func__, crtc->state->event);
 
 	tidss_runtime_get(tidss);
-
-	r = dispc_vp_set_clk_rate(tidss->dispc, tcrtc->hw_videoport,
-				  mode->clock * 1000);
-	if (r != 0)
-		return;
-
-	r = dispc_vp_enable_clk(tidss->dispc, tcrtc->hw_videoport);
-	if (r != 0)
-		return;
 
 	dispc_vp_setup(tidss->dispc, tcrtc->hw_videoport, crtc->state, true);
 	tidss_crtc_position_planes(tidss, crtc, old_state, true);
@@ -242,15 +230,6 @@ static void tidss_crtc_atomic_enable(struct drm_crtc *crtc,
 	dispc_vp_prepare(tidss->dispc, tcrtc->hw_videoport, crtc->state);
 
 	dispc_vp_enable(tidss->dispc, tcrtc->hw_videoport, crtc->state);
-
-	spin_lock_irqsave(&ddev->event_lock, flags);
-
-	if (crtc->state->event) {
-		drm_crtc_send_vblank_event(crtc, crtc->state->event);
-		crtc->state->event = NULL;
-	}
-
-	spin_unlock_irqrestore(&ddev->event_lock, flags);
 }
 
 static void tidss_crtc_atomic_disable(struct drm_crtc *crtc,
@@ -262,15 +241,6 @@ static void tidss_crtc_atomic_disable(struct drm_crtc *crtc,
 	unsigned long flags;
 
 	dev_dbg(ddev->dev, "%s, event %p\n", __func__, crtc->state->event);
-
-	reinit_completion(&tcrtc->framedone_completion);
-
-	dispc_vp_disable(tidss->dispc, tcrtc->hw_videoport);
-
-	if (!wait_for_completion_timeout(&tcrtc->framedone_completion,
-					 msecs_to_jiffies(500)))
-		dev_err(tidss->dev, "Timeout waiting for framedone on crtc %d",
-			tcrtc->hw_videoport);
 
 	dispc_vp_unprepare(tidss->dispc, tcrtc->hw_videoport);
 

@@ -14,8 +14,10 @@
 #include <drm/drm_panel.h>
 #include <drm/drm_of.h>
 #include <drm/drm_simple_kms_helper.h>
+#include <drm/drm_vblank.h>
 
 #include "tidss_crtc.h"
+#include "tidss_dispc.h"
 #include "tidss_drv.h"
 #include "tidss_encoder.h"
 
@@ -72,9 +74,65 @@ static int tidss_bridge_atomic_check(struct drm_bridge *bridge,
 	return 0;
 }
 
+static void tidss_bridge_atomic_enable(struct drm_bridge *bridge,
+                                       struct drm_bridge_state *state)
+{
+	struct tidss_encoder *t_enc = bridge_to_tidss_encoder(bridge);
+	struct tidss_device *tidss = t_enc->tidss;
+	struct drm_crtc *crtc = bridge->encoder->crtc;
+	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
+	const struct drm_display_mode *mode = &crtc->state->adjusted_mode;
+	unsigned long flags;
+	int r;
+
+	dev_dbg(tidss->dev, "%s\n", __func__);
+
+	r = dispc_vp_set_clk_rate(tidss->dispc, tcrtc->hw_videoport,
+				  mode->clock * 1000);
+	if (r != 0)
+		return;
+
+	r = dispc_vp_enable_clk(tidss->dispc, tcrtc->hw_videoport);
+	if (r != 0)
+		return;
+
+	dispc_vp_enable_final(tidss->dispc, tcrtc->hw_videoport);
+
+	spin_lock_irqsave(&tidss->ddev.event_lock, flags);
+
+	if (crtc->state->event) {
+		drm_crtc_send_vblank_event(crtc, crtc->state->event);
+		crtc->state->event = NULL;
+	}
+
+       spin_unlock_irqrestore(&tidss->ddev.event_lock, flags);
+}
+
+static void tidss_bridge_atomic_disable(struct drm_bridge *bridge,
+					struct drm_bridge_state *state)
+{
+	struct tidss_encoder *t_enc = bridge_to_tidss_encoder(bridge);
+	struct tidss_device *tidss = t_enc->tidss;
+	struct drm_crtc *crtc = bridge->encoder->crtc;
+	struct tidss_crtc *tcrtc = to_tidss_crtc(crtc);
+
+	dev_dbg(tidss->dev, "%s\n", __func__);
+
+	reinit_completion(&tcrtc->framedone_completion);
+
+	dispc_vp_disable(tidss->dispc, tcrtc->hw_videoport);
+
+	if (!wait_for_completion_timeout(&tcrtc->framedone_completion,
+					 msecs_to_jiffies(500)))
+		dev_err(tidss->dev, "Timeout waiting for framedone on crtc %d",
+			tcrtc->hw_videoport);
+}
+
 static const struct drm_bridge_funcs tidss_bridge_funcs = {
 	.attach				= tidss_bridge_attach,
 	.atomic_check			= tidss_bridge_atomic_check,
+	.atomic_enable			= tidss_bridge_atomic_enable,
+	.atomic_disable			= tidss_bridge_atomic_disable,
 	.atomic_reset			= drm_atomic_helper_bridge_reset,
 	.atomic_duplicate_state		= drm_atomic_helper_bridge_duplicate_state,
 	.atomic_destroy_state		= drm_atomic_helper_bridge_destroy_state,

@@ -1144,7 +1144,10 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
 	dispc_vp_write(dispc, hw_videoport, DISPC_VP_SIZE_SCREEN,
 		       FLD_VAL(mode->hdisplay - 1, 11, 0) |
 		       FLD_VAL(mode->vdisplay - 1, 27, 16));
+}
 
+void dispc_vp_enable_final(struct dispc_device *dispc, u32 hw_videoport)
+{
 	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, 1, 0, 0);
 }
 
