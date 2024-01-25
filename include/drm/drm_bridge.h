@@ -635,6 +635,10 @@ struct drm_bridge_funcs {
 	 * Allows bridges to create bridge-specific debugfs files.
 	 */
 	void (*debugfs_init)(struct drm_bridge *bridge, struct dentry *root);
+	void (*atomic_early_enable)(struct drm_bridge *bridge,
+				    struct drm_bridge_state *old_bridge_state);
+	void (*atomic_late_disable)(struct drm_bridge *bridge,
+				    struct drm_bridge_state *old_bridge_state);
 };
 
 /**
@@ -868,12 +872,16 @@ void drm_bridge_chain_mode_set(struct drm_bridge *bridge,
 int drm_atomic_bridge_chain_check(struct drm_bridge *bridge,
 				  struct drm_crtc_state *crtc_state,
 				  struct drm_connector_state *conn_state);
+void drm_atomic_bridge_chain_late_disable(struct drm_bridge *bridge,
+				     struct drm_atomic_state *state);
 void drm_atomic_bridge_chain_disable(struct drm_bridge *bridge,
 				     struct drm_atomic_state *state);
 void drm_atomic_bridge_chain_post_disable(struct drm_bridge *bridge,
 					  struct drm_atomic_state *state);
 void drm_atomic_bridge_chain_pre_enable(struct drm_bridge *bridge,
 					struct drm_atomic_state *state);
+void drm_atomic_bridge_chain_early_enable(struct drm_bridge *bridge,
+				    struct drm_atomic_state *state);
 void drm_atomic_bridge_chain_enable(struct drm_bridge *bridge,
 				    struct drm_atomic_state *state);
 

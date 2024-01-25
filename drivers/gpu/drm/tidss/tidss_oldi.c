@@ -225,7 +225,7 @@ static void tidss_oldi_atomic_enable(struct drm_bridge *bridge,
 {
 	struct tidss_oldi *oldi = drm_bridge_to_tidss_oldi(bridge);
 
-	tidss_oldi_tx_power(oldi, true);
+	//tidss_oldi_tx_power(oldi, true);
 }
 
 static void tidss_oldi_atomic_pre_enable(struct drm_bridge *bridge,
@@ -258,6 +258,8 @@ static void tidss_oldi_atomic_pre_enable(struct drm_bridge *bridge,
 
 	/* Enable the OLDI serial clock */
 	oldi_set_serial_clk(oldi, mode->clock * 7 * 1000);
+
+	tidss_oldi_tx_power(oldi, true);
 }
 
 static void tidss_oldi_atomic_disable(struct drm_bridge *bridge,
@@ -265,7 +267,7 @@ static void tidss_oldi_atomic_disable(struct drm_bridge *bridge,
 {
 	struct tidss_oldi *oldi = drm_bridge_to_tidss_oldi(bridge);
 
-	tidss_oldi_tx_power(oldi, false);
+	//tidss_oldi_tx_power(oldi, false);
 }
 
 static void tidss_oldi_atomic_post_disable(struct drm_bridge *bridge,
@@ -278,6 +280,8 @@ static void tidss_oldi_atomic_post_disable(struct drm_bridge *bridge,
 
 	/* Clear OLDI Config */
 	tidss_configure_oldi(oldi->tidss, oldi->parent_vp, 0);
+
+	tidss_oldi_tx_power(oldi, false);
 }
 
 #define MAX_INPUT_SEL_FORMATS	1
@@ -333,10 +337,10 @@ static int tidss_oldi_atomic_check(struct drm_bridge *bridge,
 static const struct drm_bridge_funcs tidss_oldi_bridge_funcs = {
 	.attach		= tidss_oldi_bridge_attach,
 	.atomic_check	= tidss_oldi_atomic_check,
-	.atomic_enable	= tidss_oldi_atomic_enable,
-	.atomic_disable	= tidss_oldi_atomic_disable,
-	.atomic_pre_enable = tidss_oldi_atomic_pre_enable,
-	.atomic_post_disable = tidss_oldi_atomic_post_disable,
+	//.atomic_enable	= tidss_oldi_atomic_enable,
+	//.atomic_disable	= tidss_oldi_atomic_disable,
+	.atomic_early_enable = tidss_oldi_atomic_pre_enable,
+	.atomic_late_disable = tidss_oldi_atomic_post_disable,
 	.atomic_get_input_bus_fmts = tidss_oldi_atomic_get_input_bus_fmts,
 	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
 	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
