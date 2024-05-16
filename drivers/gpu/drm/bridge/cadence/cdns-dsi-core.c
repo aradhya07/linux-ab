@@ -1082,6 +1082,15 @@ static ssize_t cdns_dsi_transfer(struct mipi_dsi_host *host,
 		writel(val, dsi->regs + DIRECT_CMD_WRDATA);
 	}
 
+	/* Case for zero parameter commands */
+	if (tx_len == 0) {
+		/* Reset the DCS Write FIFO */
+		writel(0x00, dsi->regs + DIRECT_CMD_FIFO_RST);
+
+		/* Write 0 to send the zero parameter command */
+		writel(0x00, dsi->regs + DIRECT_CMD_WRDATA);
+	}
+
 	/* Clear status flags before sending the command. */
 	writel(wait, dsi->regs + DIRECT_CMD_STS_CLR);
 	writel(wait, dsi->regs + DIRECT_CMD_STS_CTL);
