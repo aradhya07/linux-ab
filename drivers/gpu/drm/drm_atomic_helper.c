@@ -1122,7 +1122,8 @@ crtc_needs_disable(struct drm_crtc_state *old_state,
 }
 
 static void
-encoder_bridge_chain_disable(struct drm_device *dev, struct drm_atomic_state *old_state)
+encoder_bridge_chain_disable(struct drm_device *dev, struct drm_atomic_state *old_state,
+			     enum bridge_chain_operation_type op_type)
 {
 	struct drm_connector *connector;
 	struct drm_connector_state *old_conn_state, *new_conn_state;
@@ -1162,31 +1163,43 @@ encoder_bridge_chain_disable(struct drm_device *dev, struct drm_atomic_state *ol
 		if (WARN_ON(!encoder))
 			continue;
 
-		funcs = encoder->helper_private;
-
-		drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
-			       encoder->base.id, encoder->name);
-
 		/*
 		 * Each encoder has at most one connector (since we always steal
 		 * it away), so we won't call disable hooks twice.
 		 */
 		bridge = drm_bridge_chain_get_first_bridge(encoder);
-		drm_atomic_bridge_chain_disable(bridge, old_state);
 
-		/* Right function depends upon target state. */
-		if (funcs) {
-			if (funcs->atomic_disable)
-				funcs->atomic_disable(encoder, old_state);
-			else if (new_conn_state->crtc && funcs->prepare)
-				funcs->prepare(encoder);
-			else if (funcs->disable)
-				funcs->disable(encoder);
-			else if (funcs->dpms)
-				funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
+		switch (op_type) {
+		case DRM_BRIDGE_ENABLE_DISABLE:
+			funcs = encoder->helper_private;
+
+			drm_dbg_atomic(dev, "disabling [ENCODER:%d:%s]\n",
+				       encoder->base.id, encoder->name);
+
+			drm_atomic_bridge_chain_disable(bridge, old_state);
+
+			/* Right function depends upon target state. */
+			if (funcs) {
+				if (funcs->atomic_disable)
+					funcs->atomic_disable(encoder, old_state);
+				else if (new_conn_state->crtc && funcs->prepare)
+					funcs->prepare(encoder);
+				else if (funcs->disable)
+					funcs->disable(encoder);
+				else if (funcs->dpms)
+					funcs->dpms(encoder, DRM_MODE_DPMS_OFF);
+			}
+
+			break;
+
+		case DRM_BRIDGE_PRE_ENABLE_POST_DISABLE:
+			drm_atomic_bridge_chain_post_disable(bridge, old_state);
+			break;
+
+		default:
+			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_type);
+			break;
 		}
-
-		drm_atomic_bridge_chain_post_disable(bridge, old_state);
 	}
 }
 
@@ -1197,7 +1210,7 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
 	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
 	int i;
 
-	encoder_bridge_chain_disable(dev, old_state);
+	encoder_bridge_chain_disable(dev, old_state, DRM_BRIDGE_ENABLE_DISABLE);
 
 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
 		const struct drm_crtc_helper_funcs *funcs;
@@ -1243,6 +1256,8 @@ disable_outputs(struct drm_device *dev, struct drm_atomic_state *old_state)
 		if (ret == 0)
 			drm_crtc_vblank_put(crtc);
 	}
+
+	encoder_bridge_chain_disable(dev, old_state, DRM_BRIDGE_PRE_ENABLE_POST_DISABLE);
 }
 
 /**
@@ -1455,7 +1470,8 @@ static void drm_atomic_helper_commit_writebacks(struct drm_device *dev,
 }
 
 static void
-encoder_bridge_chain_enable(struct drm_device *dev, struct drm_atomic_state *old_state)
+encoder_bridge_chain_enable(struct drm_device *dev, struct drm_atomic_state *old_state,
+			    enum bridge_chain_operation_type op_type)
 {
 	struct drm_connector *connector;
 	struct drm_connector_state *new_conn_state;
@@ -1474,28 +1490,40 @@ encoder_bridge_chain_enable(struct drm_device *dev, struct drm_atomic_state *old
 			continue;
 
 		encoder = new_conn_state->best_encoder;
-		funcs = encoder->helper_private;
-
-		drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
-			       encoder->base.id, encoder->name);
 
 		/*
 		 * Each encoder has at most one connector (since we always steal
 		 * it away), so we won't call enable hooks twice.
 		 */
 		bridge = drm_bridge_chain_get_first_bridge(encoder);
-		drm_atomic_bridge_chain_pre_enable(bridge, old_state);
 
-		if (funcs) {
-			if (funcs->atomic_enable)
-				funcs->atomic_enable(encoder, old_state);
-			else if (funcs->enable)
-				funcs->enable(encoder);
-			else if (funcs->commit)
-				funcs->commit(encoder);
+		switch (op_type) {
+		case DRM_BRIDGE_PRE_ENABLE_POST_DISABLE:
+			drm_atomic_bridge_chain_pre_enable(bridge, old_state);
+			break;
+
+		case DRM_BRIDGE_ENABLE_DISABLE:
+			funcs = encoder->helper_private;
+
+			drm_dbg_atomic(dev, "enabling [ENCODER:%d:%s]\n",
+				       encoder->base.id, encoder->name);
+
+			if (funcs) {
+				if (funcs->atomic_enable)
+					funcs->atomic_enable(encoder, old_state);
+				else if (funcs->enable)
+					funcs->enable(encoder);
+				else if (funcs->commit)
+					funcs->commit(encoder);
+			}
+
+			drm_atomic_bridge_chain_enable(bridge, old_state);
+			break;
+
+		default:
+			drm_err(dev, "Unrecognized Encoder/Bridge Operation (%d).\n", op_type);
+			break;
 		}
-
-		drm_atomic_bridge_chain_enable(bridge, old_state);
 	}
 }
 
@@ -1521,6 +1549,8 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
 	struct drm_crtc_state *new_crtc_state;
 	int i;
 
+	encoder_bridge_chain_enable(dev, old_state, DRM_BRIDGE_PRE_ENABLE_POST_DISABLE);
+
 	for_each_oldnew_crtc_in_state(old_state, crtc, old_crtc_state, new_crtc_state, i) {
 		const struct drm_crtc_helper_funcs *funcs;
 
@@ -1543,7 +1573,7 @@ void drm_atomic_helper_commit_modeset_enables(struct drm_device *dev,
 		}
 	}
 
-	encoder_bridge_chain_enable(dev, old_state);
+	encoder_bridge_chain_enable(dev, old_state, DRM_BRIDGE_ENABLE_DISABLE);
 
 	drm_atomic_helper_commit_writebacks(dev, old_state);
 }
