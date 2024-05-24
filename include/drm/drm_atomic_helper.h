@@ -43,6 +43,13 @@
  */
 #define DRM_PLANE_NO_SCALING (1<<16)
 
+enum bridge_chain_operation_type {
+	DRM_BRIDGE_PRE_ENABLE,
+	DRM_BRIDGE_POST_DISABLE,
+	DRM_ENCODER_BRIDGE_ENABLE,
+	DRM_ENCODER_BRIDGE_DISABLE,
+};
+
 struct drm_atomic_state;
 struct drm_private_obj;
 struct drm_private_state;
