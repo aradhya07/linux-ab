@@ -1300,7 +1300,7 @@ static int ti_sn_bridge_probe(struct auxiliary_device *adev,
 	struct device_node *np = pdata->dev->of_node;
 	int ret;
 
-	pdata->next_bridge = devm_drm_of_get_bridge(&adev->dev, np, 1, 0);
+	pdata->next_bridge = devm_drm_of_get_bridge(np, 1, 0);
 	if (IS_ERR(pdata->next_bridge))
 		return dev_err_probe(&adev->dev, PTR_ERR(pdata->next_bridge),
 				     "failed to create panel bridge\n");

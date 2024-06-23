@@ -1055,7 +1055,7 @@ static int mtk_dpi_probe(struct platform_device *pdev)
 	if (dpi->irq < 0)
 		return dpi->irq;
 
-	dpi->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 0, 0);
+	dpi->next_bridge = devm_drm_of_get_bridge(dev->of_node, 0, 0);
 	if (IS_ERR(dpi->next_bridge))
 		return dev_err_probe(dev, PTR_ERR(dpi->next_bridge),
 				     "Failed to get bridge\n");

@@ -885,7 +885,7 @@ static int sprd_dsi_bridge_init(struct sprd_dsi *dsi,
 {
 	int ret;
 
-	dsi->panel_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	dsi->panel_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 	if (IS_ERR(dsi->panel_bridge))
 		return PTR_ERR(dsi->panel_bridge);
 

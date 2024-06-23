@@ -175,8 +175,7 @@ int ldb_find_next_bridge_helper(struct ldb *ldb)
 		if (!ldb_ch->is_available)
 			continue;
 
-		ldb_ch->next_bridge = devm_drm_of_get_bridge(dev, ldb_ch->np,
-							     1, 0);
+		ldb_ch->next_bridge = devm_drm_of_get_bridge(ldb_ch->np, 1, 0);
 		if (IS_ERR(ldb_ch->next_bridge)) {
 			ret = PTR_ERR(ldb_ch->next_bridge);
 			if (ret != -EPROBE_DEFER)

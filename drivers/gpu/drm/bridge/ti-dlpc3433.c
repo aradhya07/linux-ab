@@ -282,7 +282,7 @@ static int dlpc3433_parse_dt(struct dlpc *dlpc)
 		return dev_err_probe(dev, PTR_ERR(dlpc->vcc_flsh),
 				     "failed to get VCC_FLSH supply\n");
 
-	dlpc->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	dlpc->next_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 	if (IS_ERR(dlpc->next_bridge))
 		return PTR_ERR(dlpc->next_bridge);
 

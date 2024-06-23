@@ -2576,7 +2576,7 @@ static int mtk_dp_edp_link_panel(struct drm_dp_aux *mtk_aux)
 	struct device *dev = mtk_aux->dev;
 	int ret;
 
-	mtk_dp->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	mtk_dp->next_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 
 	/* Power off the DP and AUX: either detection is done, or no panel present */
 	mtk_dp_update_bits(mtk_dp, MTK_DP_TOP_PWR_STATE,

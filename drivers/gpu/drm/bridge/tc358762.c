@@ -232,7 +232,7 @@ static int tc358762_parse_dt(struct tc358762 *ctx)
 	struct drm_bridge *panel_bridge;
 	struct device *dev = ctx->dev;
 
-	panel_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	panel_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 	if (IS_ERR(panel_bridge))
 		return PTR_ERR(panel_bridge);
 

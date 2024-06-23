@@ -618,7 +618,7 @@ static int ps8640_bridge_link_panel(struct drm_dp_aux *aux)
 	 */
 
 	/* port@1 is ps8640 output port */
-	ps_bridge->panel_bridge = devm_drm_of_get_bridge(dev, np, 1, 0);
+	ps_bridge->panel_bridge = devm_drm_of_get_bridge(np, 1, 0);
 	if (IS_ERR(ps_bridge->panel_bridge))
 		return PTR_ERR(ps_bridge->panel_bridge);
 

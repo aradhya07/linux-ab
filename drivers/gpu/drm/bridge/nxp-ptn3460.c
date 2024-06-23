@@ -266,7 +266,7 @@ static int ptn3460_probe(struct i2c_client *client)
 		return -ENOMEM;
 	}
 
-	panel_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 0, 0);
+	panel_bridge = devm_drm_of_get_bridge(dev->of_node, 0, 0);
 	if (IS_ERR(panel_bridge))
 		return PTR_ERR(panel_bridge);
 

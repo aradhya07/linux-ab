@@ -1225,7 +1225,7 @@ static int dp_display_probe_tail(struct device *dev)
 	 * For DisplayPort interfaces external bridges are optional, so
 	 * silently ignore an error if one is not present (-ENODEV).
 	 */
-	dp->next_bridge = devm_drm_of_get_bridge(&dp->pdev->dev, dp->pdev->dev.of_node, 1, 0);
+	dp->next_bridge = devm_drm_of_get_bridge(dp->pdev->dev.of_node, 1, 0);
 	if (IS_ERR(dp->next_bridge)) {
 		ret = PTR_ERR(dp->next_bridge);
 		dp->next_bridge = NULL;

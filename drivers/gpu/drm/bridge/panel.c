@@ -480,7 +480,6 @@ EXPORT_SYMBOL(drm_panel_bridge_connector);
 #ifdef CONFIG_OF
 /**
  * devm_drm_of_get_bridge - Return next bridge in the chain
- * @dev: device to tie the bridge lifetime to
  * @np: device tree node containing encoder output ports
  * @port: port in the device tree node
  * @endpoint: endpoint in the device tree node
@@ -492,8 +491,7 @@ EXPORT_SYMBOL(drm_panel_bridge_connector);
  * Returns a pointer to the bridge if successful, or an error pointer
  * otherwise.
  */
-struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,
-					  struct device_node *np,
+struct drm_bridge *devm_drm_of_get_bridge(struct device_node *np,
 					  u32 port, u32 endpoint)
 {
 	struct drm_bridge *bridge;

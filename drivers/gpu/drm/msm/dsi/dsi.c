@@ -128,8 +128,7 @@ static int dsi_bind(struct device *dev, struct device *master, void *data)
 	    msm_dsi_is_master_dsi(msm_dsi)) {
 		struct drm_bridge *ext_bridge;
 
-		ext_bridge = devm_drm_of_get_bridge(&msm_dsi->pdev->dev,
-						    msm_dsi->pdev->dev.of_node, 1, 0);
+		ext_bridge = devm_drm_of_get_bridge(msm_dsi->pdev->dev.of_node, 1, 0);
 		if (IS_ERR(ext_bridge))
 			return PTR_ERR(ext_bridge);
 

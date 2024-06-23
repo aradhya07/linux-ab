@@ -185,7 +185,7 @@ static int mchp_lvds_probe(struct platform_device *pdev)
 	if (IS_ERR(lvds->panel))
 		return -EPROBE_DEFER;
 
-	lvds->panel_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	lvds->panel_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 
 	if (IS_ERR(lvds->panel_bridge))
 		return PTR_ERR(lvds->panel_bridge);

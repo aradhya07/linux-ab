@@ -70,7 +70,7 @@ static int lcdif_attach_bridge(struct lcdif_drm_private *lcdif)
 			return ret;
 		}
 
-		bridge = devm_drm_of_get_bridge(dev, dev->of_node, 0, of_ep.id);
+		bridge = devm_drm_of_get_bridge(dev->of_node, 0, of_ep.id);
 		if (IS_ERR(bridge)) {
 			of_node_put(ep);
 			return dev_err_probe(dev, PTR_ERR(bridge),

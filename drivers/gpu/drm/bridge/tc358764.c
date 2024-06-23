@@ -318,7 +318,7 @@ static int tc358764_parse_dt(struct tc358764 *ctx)
 		return PTR_ERR(ctx->gpio_reset);
 	}
 
-	ctx->next_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	ctx->next_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 	if (IS_ERR(ctx->next_bridge))
 		return PTR_ERR(ctx->next_bridge);
 

@@ -616,7 +616,7 @@ static int komeda_attach_bridge(struct device *dev,
 	struct drm_bridge *bridge;
 	int err;
 
-	bridge = devm_drm_of_get_bridge(dev, pipe->of_node,
+	bridge = devm_drm_of_get_bridge(pipe->of_node,
 					KOMEDA_OF_PORT_OUTPUT, 0);
 	if (IS_ERR(bridge))
 		return dev_err_probe(dev, PTR_ERR(bridge), "remote bridge not found for pipe: %s\n",

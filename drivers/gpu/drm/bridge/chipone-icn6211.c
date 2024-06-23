@@ -678,7 +678,7 @@ static int chipone_parse_dt(struct chipone *icn)
 		return PTR_ERR(icn->enable_gpio);
 	}
 
-	icn->panel_bridge = devm_drm_of_get_bridge(dev, dev->of_node, 1, 0);
+	icn->panel_bridge = devm_drm_of_get_bridge(dev->of_node, 1, 0);
 	if (IS_ERR(icn->panel_bridge))
 		return PTR_ERR(icn->panel_bridge);
 

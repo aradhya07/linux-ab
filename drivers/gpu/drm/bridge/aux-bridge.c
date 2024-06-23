@@ -112,7 +112,7 @@ static int drm_aux_bridge_probe(struct auxiliary_device *auxdev,
 		return -ENOMEM;
 
 	data->dev = &auxdev->dev;
-	data->next_bridge = devm_drm_of_get_bridge(&auxdev->dev, auxdev->dev.of_node, 0, 0);
+	data->next_bridge = devm_drm_of_get_bridge(auxdev->dev.of_node, 0, 0);
 	if (IS_ERR(data->next_bridge))
 		return dev_err_probe(&auxdev->dev, PTR_ERR(data->next_bridge),
 				     "failed to acquire drm_bridge\n");
