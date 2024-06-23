@@ -417,7 +417,7 @@ struct drm_bridge *devm_drm_panel_bridge_add_typed(struct device *dev,
 	bridge->pre_enable_prev_first = panel->prepare_prev_first;
 
 	*ptr = bridge;
-	devres_add(dev, ptr);
+	devres_add(panel->dev, ptr);
 
 	return bridge;
 }
