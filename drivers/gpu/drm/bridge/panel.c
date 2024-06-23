@@ -366,27 +366,23 @@ static void devm_drm_panel_bridge_release(struct device *dev, void *res)
 /**
  * devm_drm_panel_bridge_add - Creates a managed &drm_bridge and &drm_connector
  * that just calls the appropriate functions from &drm_panel.
- * @dev: device to tie the bridge lifetime to
  * @panel: The drm_panel being wrapped.  Must be non-NULL.
  *
  * This is the managed version of drm_panel_bridge_add() which automatically
  * calls drm_panel_bridge_remove() when @dev is unbound.
  */
-struct drm_bridge *devm_drm_panel_bridge_add(struct device *dev,
-					     struct drm_panel *panel)
+struct drm_bridge *devm_drm_panel_bridge_add(struct drm_panel *panel)
 {
 	if (WARN_ON(panel->connector_type == DRM_MODE_CONNECTOR_Unknown))
 		return ERR_PTR(-EINVAL);
 
-	return devm_drm_panel_bridge_add_typed(dev, panel,
-					       panel->connector_type);
+	return devm_drm_panel_bridge_add_typed(panel, panel->connector_type);
 }
 EXPORT_SYMBOL(devm_drm_panel_bridge_add);
 
 /**
  * devm_drm_panel_bridge_add_typed - Creates a managed &drm_bridge and
  * &drm_connector with an explicit connector type.
- * @dev: device to tie the bridge lifetime to
  * @panel: The drm_panel being wrapped.  Must be non-NULL.
  * @connector_type: The connector type (DRM_MODE_CONNECTOR_*)
  *
@@ -397,8 +393,7 @@ EXPORT_SYMBOL(devm_drm_panel_bridge_add);
  * devm_drm_panel_bridge_add() instead, and fix panel drivers as necessary if
  * they don't report a connector type.
  */
-struct drm_bridge *devm_drm_panel_bridge_add_typed(struct device *dev,
-						   struct drm_panel *panel,
+struct drm_bridge *devm_drm_panel_bridge_add_typed(struct drm_panel *panel,
 						   u32 connector_type)
 {
 	struct drm_bridge **ptr, *bridge;
@@ -511,7 +506,7 @@ struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,
 		return ERR_PTR(ret);
 
 	if (panel)
-		bridge = devm_drm_panel_bridge_add(dev, panel);
+		bridge = devm_drm_panel_bridge_add(panel);
 
 	return bridge;
 }

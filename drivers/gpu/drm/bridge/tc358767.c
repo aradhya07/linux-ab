@@ -2259,7 +2259,7 @@ static int tc_probe_dpi_bridge_endpoint(struct tc_data *tc)
 		return ret;
 
 	if (panel) {
-		bridge = devm_drm_panel_bridge_add(dev, panel);
+		bridge = devm_drm_panel_bridge_add(panel);
 		if (IS_ERR(bridge))
 			return PTR_ERR(bridge);
 	}
@@ -2289,7 +2289,7 @@ static int tc_probe_edp_bridge_endpoint(struct tc_data *tc)
 	if (panel) {
 		struct drm_bridge *panel_bridge;
 
-		panel_bridge = devm_drm_panel_bridge_add(dev, panel);
+		panel_bridge = devm_drm_panel_bridge_add(panel);
 		if (IS_ERR(panel_bridge))
 			return PTR_ERR(panel_bridge);
 

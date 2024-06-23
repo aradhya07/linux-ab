@@ -302,8 +302,7 @@ int tegra_dc_rgb_init(struct drm_device *drm, struct tegra_dc *dc)
 	 * DRM core to handle panel for us.
 	 */
 	if (output->panel) {
-		output->bridge = devm_drm_panel_bridge_add(output->dev,
-							   output->panel);
+		output->bridge = devm_drm_panel_bridge_add(output->panel);
 		if (IS_ERR(output->bridge)) {
 			dev_err(output->dev,
 				"failed to wrap panel into bridge: %pe\n",

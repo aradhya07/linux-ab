@@ -165,7 +165,7 @@ static int tidss_dispc_modeset_init(struct tidss_device *tidss)
 				return -EINVAL;
 			}
 
-			bridge = devm_drm_panel_bridge_add(dev, panel);
+			bridge = devm_drm_panel_bridge_add(panel);
 			if (IS_ERR(bridge)) {
 				dev_err(dev,
 					"failed to set up panel bridge for port %d\n",

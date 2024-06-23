@@ -67,8 +67,7 @@ int rcar_du_encoder_init(struct rcar_du_device *rcdu,
 		if (IS_ERR(panel))
 			return PTR_ERR(panel);
 
-		bridge = devm_drm_panel_bridge_add_typed(rcdu->dev, panel,
-							 DRM_MODE_CONNECTOR_DPI);
+		bridge = devm_drm_panel_bridge_add_typed(panel, DRM_MODE_CONNECTOR_DPI);
 		if (IS_ERR(bridge))
 			return PTR_ERR(bridge);
 	} else {

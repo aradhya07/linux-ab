@@ -1740,7 +1740,7 @@ of_find_panel_or_bridge:
 
 	panel = of_drm_find_panel(remote);
 	if (!IS_ERR(panel)) {
-		dsi->out_bridge = devm_drm_panel_bridge_add(dev, panel);
+		dsi->out_bridge = devm_drm_panel_bridge_add(panel);
 	} else {
 		dsi->out_bridge = of_drm_find_bridge(remote);
 		if (!dsi->out_bridge)
