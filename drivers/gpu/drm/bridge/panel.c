@@ -372,8 +372,7 @@ static void devm_drm_panel_bridge_release(struct device *dev, void *res)
  * This is the managed version of drm_panel_bridge_add() which automatically
  * calls drm_panel_bridge_remove() when @dev is unbound.
  */
-struct drm_bridge *devm_drm_panel_bridge_add(struct device *dev,
-					     struct drm_panel *panel)
+struct drm_bridge *devm_drm_panel_bridge_add(struct drm_panel *panel)
 {
 	if (WARN_ON(panel->connector_type == DRM_MODE_CONNECTOR_Unknown))
 		return ERR_PTR(-EINVAL);
@@ -397,8 +396,7 @@ EXPORT_SYMBOL(devm_drm_panel_bridge_add);
  * devm_drm_panel_bridge_add() instead, and fix panel drivers as necessary if
  * they don't report a connector type.
  */
-struct drm_bridge *devm_drm_panel_bridge_add_typed(struct device *dev,
-						   struct drm_panel *panel,
+struct drm_bridge *devm_drm_panel_bridge_add_typed(struct drm_panel *panel,
 						   u32 connector_type)
 {
 	struct drm_bridge **ptr, *bridge;
@@ -497,8 +495,7 @@ EXPORT_SYMBOL(drm_panel_bridge_connector);
  * Returns a pointer to the bridge if successful, or an error pointer
  * otherwise.
  */
-struct drm_bridge *devm_drm_of_get_bridge(struct device *dev,
-					  struct device_node *np,
+struct drm_bridge *devm_drm_of_get_bridge(struct device_node *np,
 					  u32 port, u32 endpoint)
 {
 	struct drm_bridge *bridge;
