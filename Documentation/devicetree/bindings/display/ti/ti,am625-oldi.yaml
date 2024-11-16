@@ -75,19 +75,13 @@ allOf:
     then:
       properties:
         ti,companion-oldi: false
-        ti,oldi-io-ctrl: false
-        clocks: false
-        clock-names: false
-
-    else:
-      required:
-        - ti,oldi-io-ctrl
-        - clocks
-        - clock-names
 
 required:
   - reg
   - ports
+  - ti,oldi-io-ctrl
+  - clocks
+  - clock-names
 
 additionalProperties: false
 
